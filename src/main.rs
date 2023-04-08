@@ -16,8 +16,8 @@ struct Keys {
     travis: Option<String>,
 }
 
-fn main() -> Result<(), Error> {
-    let file_name = "themes/test.toml";
+fn read_flie(file_name: String) -> Result<(), Error> {
+    let file_name = file_name;
     let file = File::open(file_name)?;
     let mut reader = BufReader::new(file);
     let mut contents = String::new();
@@ -29,4 +29,8 @@ fn main() -> Result<(), Error> {
     println!("{:?}", config.keys.github);
     println!("{:?}", config.keys.travis.as_ref().unwrap());
     Ok(())
+}
+
+fn main() {
+    read_flie("themes/test.toml".to_owned());
 }
