@@ -1,4 +1,5 @@
 use std::fs::File;
+use std::path::PathBuf;
 use std::io::{Error, Read, BufReader};
 
 use serde::Deserialize;
@@ -17,7 +18,8 @@ struct Keys {
 }
 
 fn read_flie(file_name: String) -> Result<(), Error> {
-    let file_name = file_name;
+    let file_name = PathBuf::from(file_name);
+    println!("Is {:?} exist?: {:?}", file_name, file_name.exists());
     let file = File::open(file_name)?;
     let mut reader = BufReader::new(file);
     let mut contents = String::new();
