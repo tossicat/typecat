@@ -48,6 +48,8 @@ fn main() {
     let unparsed_file = read_to_string("test/test.md").expect("cannot read file");
     let file = MarkdownParser::parse(Rule::FILE, &unparsed_file).expect("unsuccessful parse").next().unwrap();
     for line in file.into_inner() {
-        println!("{:?}", line);
+        for sentence in line.into_inner() {
+            println!("{:?}", sentence);
+        }
     }
 }

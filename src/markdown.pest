@@ -3,27 +3,29 @@ WHITESPACE = _{ " " }
 LETTERS = { LETTER+ }
 NUMBERS = { NUMBER+ }
 SYMBOLS = { SYMBOL+ }
-PUNCTUATED = { ("." | "!" | "?" | FINAL_PUNCTUATION | OPEN_PUNCTUATION | CLOSE_PUNCTUATION | DASH_PUNCTUATION | INITIAL_PUNCTUATION ){1} }
+PUNCTUATED = { PUNCTUATION{1} }
 
 //style
-BASIC = { ( LETTERS | NUMBERS | SYMBOLS ) }
-BOLD = { ("**" ~ ( LETTERS | NUMBERS | SYMBOLS ) ~ "**") | ("__" ~ ( LETTERS | NUMBERS | SYMBOLS ) ~ "__") }
-ITALIC = { ("*" ~ ( LETTERS | NUMBERS | SYMBOLS )  ~ "*") | ("_" ~ ( LETTERS | NUMBERS | SYMBOLS ) ~ "_") }
-
-
-//sentence
-WORD = { ( BASIC | BOLD | ITALIC ) }
-SENTENCE = { WORD+ ~ ( PUNCTUATED )* }
-PARAGRAPH = { ( SENTENCE )* }
+BOID = { "**" | "__" }
+ITALIC = { "*" | "_" }
+STRIKETHROUGH = { "~~" }
+BOIDITALIC = { "***" }
+OPEN_SUBSCRIPT = { "<sub>" }
+CLOSED_SUBSCRIPT = { "</sub>" }
+OPEN_SUPERSCRIPT = { "<sup>" } 
+CLOSED_SUPERSCRIPT = { "</sup>" }
 
 //paragraph
+STYLED = { ( BOIDITALIC | BOID | ITALIC | STRIKETHROUGH | OPEN_SUBSCRIPT | CLOSED_SUBSCRIPT | OPEN_SUPERSCRIPT | CLOSED_SUPERSCRIPT ) }
+SENTENCE = { ( STYLED | LETTERS | NUMBERS | SYMBOLS | PUNCTUATED )* }
 
+//header
 H1 = @{ "#"{1} ~ WHITESPACE+ }
 H2 = @{ "#"{2} ~ WHITESPACE+ }
 H3 = @{ "#"{3} ~ WHITESPACE+ }
 H4 = @{ "#"{4} ~ WHITESPACE+ }
 H5 = @{ "#"{5} ~ WHITESPACE+ }
-HEADER = { ( H1 | H2 | H3 | H4 | H5 ) ~ PARAGRAPH }
+HEADER = { ( H1 | H2 | H3 | H4 | H5 ) ~ SENTENCE }
 
-// file
-FILE = {SOI ~ (( HEADER | PARAGRAPH )? ~ NEWLINE)* ~ EOI }
+//final
+FILE = {SOI ~ (( HEADER | SENTENCE )? ~ NEWLINE)* ~ EOI }
