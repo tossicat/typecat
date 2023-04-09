@@ -1,0 +1,29 @@
+//function
+WHITESPACE = _{ " " }
+LETTERS = { LETTER+ }
+NUMBERS = { NUMBER+ }
+SYMBOLS = { SYMBOL+ }
+PUNCTUATED = { ("." | "!" | "?" | FINAL_PUNCTUATION | OPEN_PUNCTUATION | CLOSE_PUNCTUATION | DASH_PUNCTUATION | INITIAL_PUNCTUATION ){1} }
+
+//style
+BASIC = { ( LETTERS | NUMBERS | SYMBOLS ) }
+BOLD = { ("**" ~ ( LETTERS | NUMBERS | SYMBOLS ) ~ "**") | ("__" ~ ( LETTERS | NUMBERS | SYMBOLS ) ~ "__") }
+ITALIC = { ("*" ~ ( LETTERS | NUMBERS | SYMBOLS )  ~ "*") | ("_" ~ ( LETTERS | NUMBERS | SYMBOLS ) ~ "_") }
+
+
+//sentence
+WORD = { ( BASIC | BOLD | ITALIC ) }
+SENTENCE = { WORD+ ~ ( PUNCTUATED )* }
+PARAGRAPH = { ( SENTENCE )* }
+
+//paragraph
+
+H1 = @{ "#"{1} ~ WHITESPACE+ }
+H2 = @{ "#"{2} ~ WHITESPACE+ }
+H3 = @{ "#"{3} ~ WHITESPACE+ }
+H4 = @{ "#"{4} ~ WHITESPACE+ }
+H5 = @{ "#"{5} ~ WHITESPACE+ }
+HEADER = { ( H1 | H2 | H3 | H4 | H5 ) ~ PARAGRAPH }
+
+// file
+FILE = {SOI ~ (( HEADER | PARAGRAPH )? ~ NEWLINE)* ~ EOI }

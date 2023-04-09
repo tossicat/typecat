@@ -1,8 +1,18 @@
-use std::fs::File;
+use std::fs::{File, read_to_string};
 use std::path::PathBuf;
 use std::io::{Error, Read, BufReader};
 
 use serde::Deserialize;
+
+extern crate pest;
+#[macro_use]
+extern crate pest_derive;
+
+use pest::Parser;
+
+#[derive(Parser)]
+#[grammar = "markdown.pest"]
+pub struct MarkdownParser;
 
 #[derive(Deserialize)]
 struct Config {
@@ -35,4 +45,9 @@ fn read_flie(file_name: String) -> Result<(), Error> {
 
 fn main() {
     read_flie("themes/test.toml".to_owned());
+    let unparsed_file = read_to_string("test/test.md").expect("cannot read file");
+    let file = MarkdownParser::parse(Rule::FILE, &unparsed_file).expect("unsuccessful parse").next().unwrap();
+    for line in file.into_inner() {
+        println!("{:?}", line);
+    }
 }
