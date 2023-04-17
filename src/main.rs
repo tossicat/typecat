@@ -1,8 +1,8 @@
-use std::fs::{File, read_to_string};
-use std::path::PathBuf;
-use std::io::{Error, Read, BufReader};
+use std::fs::read_to_string;
 
 use serde::Deserialize;
+
+use typecat::read_flie;
 
 extern crate pest;
 #[macro_use]
@@ -27,26 +27,24 @@ struct Keys {
     travis: Option<String>,
 }
 
-fn read_flie(file_name: String) -> Result<(), Error> {
-    let file_name = PathBuf::from(file_name);
-    println!("Is {:?} exist?: {:?}", file_name, file_name.exists());
-    let file = File::open(file_name)?;
-    let mut reader = BufReader::new(file);
-    let mut contents = String::new();
-    reader.read_to_string(&mut contents)?;
-    // print!("{}", contents);
+fn parsing_toml(contents: String) {
     let config: Config = toml::from_str(&contents).unwrap();
     println!("{:?}", config.ip);
     println!("{:?}", config.port);
     println!("{:?}", config.keys.github);
     println!("{:?}", config.keys.travis.as_ref().unwrap());
-    Ok(())
 }
 
 fn main() {
-    read_flie("themes/test.toml".to_owned());
+    // toml 형식 파일 테스트 시작
+    let temp = read_flie("themes/test.toml".to_owned());
+    println!("{:?}", parsing_toml(temp));
+    // toml 형식 파일 테스트 끝
     let unparsed_file = read_to_string("test/test.md").expect("cannot read file");
-    let file = MarkdownParser::parse(Rule::FILE, &unparsed_file).expect("unsuccessful parse").next().unwrap();
+    let file = MarkdownParser::parse(Rule::FILE, &unparsed_file)
+        .expect("unsuccessful parse")
+        .next()
+        .unwrap();
     for line in file.into_inner() {
         for sentence in line.into_inner() {
             println!("{:?}", sentence);
