@@ -10,9 +10,11 @@
 //! use typecat::read_flie;
 //!
 //! let temp = read_flie("themes/test.toml".to_owned());
-//! println!("{:?}", parsing_toml(temp));
+//! println!("{:?}", temp);
 //! ```
 //!
+
+mod toml_parser;
 
 use std::fs::File;
 use std::io::{BufReader, Read};
@@ -42,3 +44,11 @@ pub fn read_flie(file_name: String) -> String {
 //     println!("{:?}", config.keys.travis.as_ref().unwrap());
 //     Ok(())
 // }
+
+pub fn parsing_toml(contents: String) {
+    let config: toml_parser::Config = toml::from_str(&contents).unwrap();
+    println!("{:?}", config.ip);
+    println!("{:?}", config.port);
+    println!("{:?}", config.keys.github);
+    println!("{:?}", config.keys.travis.as_ref().unwrap());
+}

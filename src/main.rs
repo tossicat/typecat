@@ -1,7 +1,6 @@
 use std::fs::read_to_string;
 
-use serde::Deserialize;
-
+use typecat::parsing_toml;
 use typecat::read_flie;
 
 extern crate pest;
@@ -13,27 +12,6 @@ use pest::Parser;
 #[derive(Parser)]
 #[grammar = "markdown.pest"]
 pub struct MarkdownParser;
-
-#[derive(Deserialize)]
-struct Config {
-    ip: String,
-    port: Option<u16>,
-    keys: Keys,
-}
-
-#[derive(Deserialize)]
-struct Keys {
-    github: String,
-    travis: Option<String>,
-}
-
-fn parsing_toml(contents: String) {
-    let config: Config = toml::from_str(&contents).unwrap();
-    println!("{:?}", config.ip);
-    println!("{:?}", config.port);
-    println!("{:?}", config.keys.github);
-    println!("{:?}", config.keys.travis.as_ref().unwrap());
-}
 
 fn main() {
     // toml 형식 파일 테스트 시작
