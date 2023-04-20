@@ -29,22 +29,6 @@ pub fn read_flie(file_name: String) -> String {
     data
 }
 
-// fn read_flie(file_name: String) -> Result<(), Error> {
-//     let file_name = PathBuf::from(file_name);
-//     println!("Is {:?} exist?: {:?}", file_name, file_name.exists());
-//     let file = File::open(file_name)?;
-//     let mut reader = BufReader::new(file);
-//     let mut contents = String::new();
-//     reader.read_to_string(&mut contents)?;
-//     // print!("{}", contents);
-//     let config: Config = toml::from_str(&contents).unwrap();
-//     println!("{:?}", config.ip);
-//     println!("{:?}", config.port);
-//     println!("{:?}", config.keys.github);
-//     println!("{:?}", config.keys.travis.as_ref().unwrap());
-//     Ok(())
-// }
-
 pub fn parsing_toml(contents: String) {
     let config: toml_parser::Config = toml::from_str(&contents).unwrap();
     println!("{:?}", config.ip);
