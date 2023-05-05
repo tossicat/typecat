@@ -49,11 +49,15 @@ fn is_file_extensions_md_or_toml(file_name: &String) -> Result<bool, String> {
     let is_md = identify_extension(file_name, &"md".to_string());
     if is_md == Ok(true) {
         indicater.0 = true;
+    } else if is_md == Err("No file extensions.".to_string()) {
+        return is_md;
     } else {
         indicater.0 = false;
     }
     if is_toml == Ok(true) {
         indicater.1 = true;
+    } else if is_toml == Err("No file extensions.".to_string()) {
+        return is_toml;
     } else {
         indicater.1 = false;
     }
@@ -78,13 +82,17 @@ fn is_2_files_extensions_md_or_toml(file_names: &Vec<String>) {
         let mut indicater: (bool, bool) = (false, false);
         let is_toml = identify_extension(file_name, &"toml".to_string());
         let is_md = identify_extension(file_name, &"md".to_string());
-        if is_toml == Ok(true) {
+        if is_md == Ok(true) {
             indicater.0 = true;
+        } else if is_md == Err("No file extensions.".to_string()) {
+            // return Err("No file extensions.".to_string())
         } else {
             indicater.0 = false;
         }
-        if is_md == Ok(true) {
+        if is_toml == Ok(true) {
             indicater.1 = true;
+        } else if is_toml == Err("No file extensions.".to_string()) {
+            // return Err("No file extensions.".to_string())
         } else {
             indicater.1 = false;
         }
@@ -101,7 +109,7 @@ fn is_2_files_extensions_md_or_toml(file_names: &Vec<String>) {
 pub fn identify_extension(file_name: &String, extension: &String) -> Result<bool, String> {
     let path_extension = Path::new(&file_name);
     match path_extension.extension() {
-        None => Err("No extensions.".to_string()),
+        None => Err("No file extensions.".to_string()),
         Some(path_extension) => match path_extension.to_str() == Some(extension) {
             true => Ok(true),
             false => {
@@ -145,7 +153,7 @@ mod tests {
         // 현재는 파일명에 확장자가 없기 때문에 `false`를 반환합니다.
         let temp_path = "themes/test";
         assert_eq!(
-            Result::Err("No extensions.".to_string()),
+            Result::Err("No file extensions.".to_string()),
             identify_extension(&temp_path.to_string(), &"toml".to_string())
         );
     }
