@@ -12,6 +12,92 @@ use std::path::Path;
 /// 만약 입력된 파일 이름에 들어 있는 확장자가 현재 필요한 확장자가 아니라면,
 ///  `Err()`을 이용해 에러 메세지를 반환합니다.
 ///  만약 같다면 `Ok(true)`을 반환하게 됩니다.
+pub fn validate(file_names: Vec<String>) -> Result<Vec<String>, String> {
+    match file_names.len() {
+        0 => Err("There are no file names.".to_string()),
+        1 => {
+            let temp = is_file_extensions_md_or_toml(&file_names[0]);
+            // println!("files_name이 1개, {:?}", temp);
+            match temp {
+                // Ok(true) => println!("md format file name is '{}'", &file_names[0]),
+                Ok(true) => return Ok(file_names),
+                Ok(false) => Err("There is no md format file. only TOML format file!".to_string()),
+                Err(e) => Err(e),
+            }
+        }
+        2 => {
+            is_2_files_extensions_md_or_toml(&file_names);
+            Err("files_name이 2개!".to_string())
+        }
+        _ => Err("Too many file names entered.".to_string()),
+    }
+}
+
+/// 파일 1개의 확장자가 `md` 또는 `TOML`인지 확인하는 함수
+///
+/// 1. 만약 입력된 파일 이름에 들어 있는 확장자가 `md`도 `TOML`도 아니라면,
+///  `Err()`을 이용해 에러 메세지를 반환합니다.
+/// 2. 만약 입력된 파일 이름에 들어 있는 확장자가 `md`이면서 `TOML`이라면,
+///  `Err()`을 이용해 에러 메세지를 반환합니다. 이건 당연히 불가능합니다.
+/// 3. 만약 입력된 파일 이름에 들어 있는 확장자가 `md`이면
+///   `Ok(true)`을 반환합니다.
+/// 4. 만약 입력된 파일 이름에 들어 있는 확장자가 `TOML`이면
+///   `Ok(false)`을 반환합니다.
+fn is_file_extensions_md_or_toml(file_name: &String) -> Result<bool, String> {
+    let mut indicater: (bool, bool) = (false, false);
+    let is_toml = identify_extension(file_name, &"toml".to_string());
+    let is_md = identify_extension(file_name, &"md".to_string());
+    if is_md == Ok(true) {
+        indicater.0 = true;
+    } else {
+        indicater.0 = false;
+    }
+    if is_toml == Ok(true) {
+        indicater.1 = true;
+    } else {
+        indicater.1 = false;
+    }
+    // println!("is_md_or_TOML: {:?}", indicater);
+    match indicater {
+        (true, true) => Err("It is a md format file and a TOML format file!".to_string()),
+        (true, false) => Ok(true),
+        (false, true) => Ok(false),
+        (false, false) => Err("Not even a md format file as a TOML format file!".to_string()),
+    }
+}
+
+/// 파일 2개의 확장자들이 `md` 또는 `TOML`인지 확인하는 함수
+///
+/// 만약 입력된 파일 이름에 들어 있는 확장자가 `md` 또는 `TOML`가 아니라면,
+///  `Err()`을 이용해 에러 메세지를 반환합니다.
+///  만약 같다면 `Ok(true)`을 반환하게 됩니다.
+fn is_2_files_extensions_md_or_toml(file_names: &Vec<String>) {
+    // let mut indicater: (bool, bool) = (false, false);
+    let mut indicater_list: Vec<(bool, bool)> = Vec::new();
+    for file_name in file_names {
+        let mut indicater: (bool, bool) = (false, false);
+        let is_toml = identify_extension(file_name, &"toml".to_string());
+        let is_md = identify_extension(file_name, &"md".to_string());
+        if is_toml == Ok(true) {
+            indicater.0 = true;
+        } else {
+            indicater.0 = false;
+        }
+        if is_md == Ok(true) {
+            indicater.1 = true;
+        } else {
+            indicater.1 = false;
+        }
+        indicater_list.push(indicater);
+    }
+    println!("is_md_or_TOML: {:?}", indicater_list);
+}
+
+/// 파일 확장자가 필요한 확장지인지 확인하는 함수
+///
+/// 만약 입력된 파일 이름에 들어 있는 확장자가 현재 필요한 확장자가 아니라면,
+///  `Err()`을 이용해 에러 메세지를 반환합니다.
+///  만약 같다면 `Ok(true)`을 반환하게 됩니다.
 pub fn identify_extension(file_name: &String, extension: &String) -> Result<bool, String> {
     let path_extension = Path::new(&file_name);
     match path_extension.extension() {
@@ -30,7 +116,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_extension() {
+    fn _identify_extension() {
         // 입력된 파일명에 확장자가 `toml`형식이 들어 왔는지 확인하는 테스트입니다.
         // 현재는 파일명에 `toml` 확장자가 들어 있기 때문에 `true`을 반환합니다.
         let temp_path = "themes/test.toml";
@@ -61,6 +147,42 @@ mod tests {
         assert_eq!(
             Result::Err("No extensions.".to_string()),
             identify_extension(&temp_path.to_string(), &"toml".to_string())
+        );
+    }
+
+    #[test]
+    fn _is_file_extensions_md_or_toml() {
+        // 입력된 파일명에 확장자가 `mt`이 들어 왔는지 확인하는 테스트입니다.
+        // `Err`을 반환하는 경우가 2가지가 있지만, 한 가지는 나올 수 없는 경우이기 때문에
+        // 테스트하지 않습니다. 테스트하는 함수 주석을 참고하세요.
+        // 현재 파일명에 `md` 확장자가 들어 있기 때문에 `Ok(true)`을 반환해야 합니다.
+        let temp_file_name = "test.md".to_string();
+        assert_eq!(
+            Result::Ok(true),
+            is_file_extensions_md_or_toml(&temp_file_name)
+        );
+        // 현재 파일명에 `TOML` 확장자가 들어 있기 때문에 `Ok(false)`을 반환해야 합니다.
+        // 즉 이 결과의 의미는 여기서에 사용가능한 확장자이자만 파일 이름이 1개만 들어온다면
+        // `md` 형식 파일이 들어와야 한다는 의미입니다. 그러나 `toml` 형식이 들어 왔기 때문에
+        // `false`를 추가해서 반환해야 합니다.
+        let temp_file_name = "test.toml".to_string();
+        assert_eq!(
+            Result::Ok(false),
+            is_file_extensions_md_or_toml(&temp_file_name)
+        );
+        // 현재 파일명에 `txt` 확장자가 들어 있기 때문에 `Err`을 반환하고
+        // 아래와 같은 적절한 에러 메세지도 반환해야 합니다.
+        let temp_file_name = "test.txt".to_string();
+        assert_eq!(
+            Err("Not even a md format file as a TOML format file!".to_string()),
+            is_file_extensions_md_or_toml(&temp_file_name)
+        );
+        // 파일 이름도 앞의 테스트오 다르게 바꾸고 확장자도 `jpg`로 변경해서 테스트합니다.
+        // 파일명에 `jpg` 확장자 들어 있기 때문에 당연히 적절한 에러 메세지를 추가해 `Err`을 반환해야 합니다.
+        let temp_file_name = "temp.jpg".to_string();
+        assert_eq!(
+            Err("Not even a md format file as a TOML format file!".to_string()),
+            is_file_extensions_md_or_toml(&temp_file_name)
         );
     }
 }

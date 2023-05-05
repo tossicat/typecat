@@ -2,6 +2,7 @@ use std::fs::read_to_string;
 
 use typecat::parsing_toml;
 use typecat::read_theme_file;
+use typecat::validate;
 
 extern crate pest;
 #[macro_use]
@@ -34,8 +35,12 @@ fn main() {
             println!("{:?}", sentence);
         }
     }
+    // CMD로 작동하기 위한 코드 시작
     let cli = Cli::parse();
-    println!("files_name: {:?}", cli.file_names);
+    // println!("files_name: {:?}", cli.file_names);
+    let temp = validate(&cli.file_names);
+    println!("results: {:?}", temp);
+    // CMD로 작동하기 위한 코드 끝
 
     // toml 형식 파일 테스트 시작
     let toml_file_name = "test.toml";

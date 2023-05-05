@@ -7,6 +7,10 @@ mod manage_file;
 mod themes;
 mod toml_parser;
 
+pub fn validate(file_names: &Vec<String>) -> Result<Vec<String>, String> {
+    manage_file::validate(file_names.to_vec())
+}
+
 pub fn identify_extension(file_name: &String, extension: &String) -> Result<bool, String> {
     manage_file::identify_extension(file_name, extension)
 }
