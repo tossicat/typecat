@@ -19,7 +19,7 @@ use std::fs::File;
 use std::io::{BufReader, Read};
 use std::path::Path;
 
-use crate::manage_file;
+use crate::filetypes;
 
 fn read_flie(file_name: &String) -> String {
     let mut data = String::new();
@@ -58,7 +58,7 @@ pub fn read_toml_file(file_name: &String) -> Result<String, String> {
     let sub_path = "themes".to_string();
     let temp_file_path = Path::new(&file_name);
     // println!("{:?}",manage_file::identify_extension(file_name, &temp_extension));
-    let temp = match manage_file::identify_extension(file_name, &temp_extension) {
+    let temp = match filetypes::identify_extension(file_name, &temp_extension) {
         Result::Ok(true) => match temp_file_path.try_exists() {
             Result::Ok(true) => Ok(read_flie(file_name)),
             Result::Ok(false) => {

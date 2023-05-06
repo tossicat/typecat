@@ -18,3 +18,11 @@ pub struct Keys {
     pub github: String,
     pub travis: Option<String>,
 }
+
+pub fn parsing_toml(contents: String) {
+    let config: Config = toml::from_str(&contents).unwrap();
+    println!("{:?}", config.ip);
+    println!("{:?}", config.port);
+    println!("{:?}", config.keys.github);
+    println!("{:?}", config.keys.travis.as_ref().unwrap());
+}

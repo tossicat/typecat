@@ -1,7 +1,5 @@
-use std::fs::read_to_string;
-
 use typecat::markdown_parser;
-use typecat::parsing_toml;
+use typecat::parse_toml;
 use typecat::read_theme_file;
 use typecat::validate;
 
@@ -33,11 +31,10 @@ fn main() {
     let toml_file_name = "test.toml";
     let test = read_theme_file(&toml_file_name.to_owned());
     match test {
-        Ok(s) => println!("{:?}", parsing_toml(s)),
+        Ok(s) => println!("{:?}", parse_toml(s)),
         Err(e) => println!("{:?}", e),
     };
     // toml 형식 파일 테스트 끝
-
 
     // 마크다운 파서 테스트 시작
     markdown_parser();

@@ -6,27 +6,24 @@ extern crate pest;
 #[macro_use]
 extern crate pest_derive;
 mod markdown_parser;
-mod manage_file;
+mod filetypes;
 mod themes;
 mod toml_parser;
 
 pub fn validate(file_names: &[String]) -> Result<Vec<String>, String> {
-    manage_file::validate(file_names.to_vec())
+    filetypes::validate(file_names.to_vec())
 }
 
 pub fn identify_extension(file_name: &String, extension: &String) -> Result<bool, String> {
-    manage_file::identify_extension(file_name, extension)
+    filetypes::identify_extension(file_name, extension)
 }
 
 pub fn read_theme_file(file_name: &String) -> Result<String, String> {
     themes::read_toml_file(file_name)
 }
-pub fn parsing_toml(contents: String) {
-    let config: toml_parser::Config = toml::from_str(&contents).unwrap();
-    println!("{:?}", config.ip);
-    println!("{:?}", config.port);
-    println!("{:?}", config.keys.github);
-    println!("{:?}", config.keys.travis.as_ref().unwrap());
+
+pub fn parse_toml(contents: String) {
+    toml_parser::parsing_toml(contents);
 }
 
 pub fn markdown_parser() {
