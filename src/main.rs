@@ -1,18 +1,9 @@
 use std::fs::read_to_string;
 
+use typecat::markdown_parser;
 use typecat::parsing_toml;
 use typecat::read_theme_file;
 use typecat::validate;
-
-extern crate pest;
-#[macro_use]
-extern crate pest_derive;
-
-use pest::Parser;
-
-#[derive(Parser)]
-#[grammar = "markdown.pest"]
-pub struct MarkdownParser;
 
 // CMD로 작동하기 위한 코드 시작
 use clap::Parser as clap_parser;
@@ -25,16 +16,6 @@ struct Cli {
 // CMD로 작동하기 위한 코드 끝
 
 fn main() {
-    let unparsed_file = read_to_string("test/test.md").expect("cannot read file");
-    let file = MarkdownParser::parse(Rule::FILE, &unparsed_file)
-        .expect("unsuccessful parse")
-        .next()
-        .unwrap();
-    for line in file.into_inner() {
-        for sentence in line.into_inner() {
-            println!("{:?}", sentence);
-        }
-    }
     // CMD로 작동하기 위한 코드 시작
     let cli = Cli::parse();
     // println!("files_name: {:?}", cli.file_names);
@@ -56,4 +37,9 @@ fn main() {
         Err(e) => println!("{:?}", e),
     };
     // toml 형식 파일 테스트 끝
+
+
+    // 마크다운 파서 테스트 시작
+    markdown_parser();
+    // 마크다운 파서 테스트 끝
 }

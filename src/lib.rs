@@ -2,7 +2,10 @@
 //!
 //! 이 모듈은 기본적으로 TypeCat이 처리하는 함수를 정리하는 라이브러리입니다.
 //!
-
+extern crate pest;
+#[macro_use]
+extern crate pest_derive;
+mod markdown_parser;
 mod manage_file;
 mod themes;
 mod toml_parser;
@@ -24,4 +27,8 @@ pub fn parsing_toml(contents: String) {
     println!("{:?}", config.port);
     println!("{:?}", config.keys.github);
     println!("{:?}", config.keys.travis.as_ref().unwrap());
+}
+
+pub fn markdown_parser() {
+    markdown_parser::parse_markdown();
 }
