@@ -1,6 +1,7 @@
 use std::fs::read_to_string;
 extern crate pest;
 use pest::Parser;
+use pest::iterators::Pair;
 
 #[derive(Parser)]
 #[grammar = "markdown.pest"]
@@ -14,13 +15,19 @@ pub fn parse_markdown() {
         .unwrap();
     for line in file.into_inner() {
             if line.as_rule() == Rule::HEADER {
-                println!("{:?}", line);
-                println!("{:?}", line.into_inner().count());
+                parse_header(line);
                 println!("###############################")
             }
             else {
-                println!("{:?}", line);
-                println!("{:?}", line.into_inner().count());
+                parse_sentence(line);
             }
         }
+}
+
+fn parse_header(header: Pair<Rule>) {
+    println!("{:?}", header);
+}
+
+fn parse_sentence(sentence: Pair<Rule>) {
+    println!("{:?}", sentence);
 }
