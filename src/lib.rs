@@ -7,7 +7,7 @@ mod manage_file;
 mod themes;
 mod toml_parser;
 
-pub fn validate(file_names: &Vec<String>) -> Result<Vec<String>, String> {
+pub fn validate(file_names: &[String]) -> Result<Vec<String>, String> {
     manage_file::validate(file_names.to_vec())
 }
 

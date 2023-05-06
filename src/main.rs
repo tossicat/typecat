@@ -39,7 +39,13 @@ fn main() {
     let cli = Cli::parse();
     // println!("files_name: {:?}", cli.file_names);
     let temp = validate(&cli.file_names);
-    println!("results: {:?}", temp);
+    match temp {
+        Ok(e) => {
+            println!("md_file_name: {:?}", e[0]);
+            println!("toml_file_name: {:?}", e[1]);
+        }
+        Err(e) => println!("{:?}", e),
+    };
     // CMD로 작동하기 위한 코드 끝
 
     // toml 형식 파일 테스트 시작
