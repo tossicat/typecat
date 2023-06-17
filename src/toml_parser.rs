@@ -10,19 +10,31 @@ use serde::Deserialize;
 pub struct Config {
     pub ip: String,
     pub port: Option<u16>,
-    pub keys: Keys,
+    pub page: Page,
+    pub paragraph: Paragraph,
 }
 
 #[derive(Deserialize)]
-pub struct Keys {
-    pub github: String,
-    pub travis: Option<String>,
+pub struct Page {
+    pub margin : i32,
+    pub font: String,
+    // pub travis: Option<String>,
+}
+
+#[derive(Deserialize)]
+pub struct Paragraph {
+    pub margin : i32,
+    pub font: String,
+    // pub travis: Option<String>,
 }
 
 pub fn parsing_toml(contents: String) {
     let config: Config = toml::from_str(&contents).unwrap();
     println!("{:?}", config.ip);
     println!("{:?}", config.port);
-    println!("{:?}", config.keys.github);
-    println!("{:?}", config.keys.travis.as_ref().unwrap());
+    println!("{:?}", config.page.font);
+    println!("{:?}", config.page.margin);
+    println!("{:?}", config.paragraph.margin);
+    println!("{:?}", config.paragraph.font);
+    // println!("{:?}", config.keys.travis.as_ref().unwrap());
 }
