@@ -12,6 +12,7 @@ pub struct Config {
     pub port: Option<u16>,
     pub page: Page,
     pub paragraph: Paragraph,
+    pub h1:H1,
 }
 
 #[derive(Deserialize)]
@@ -28,13 +29,22 @@ pub struct Paragraph {
     // pub travis: Option<String>,
 }
 
+#[derive(Deserialize)]
+pub struct H1 {
+    pub margin : i32,
+    pub font: String,
+    // pub travis: Option<String>,
+}
+
 pub fn parsing_toml(contents: String) {
     let config: Config = toml::from_str(&contents).unwrap();
     println!("{:?}", config.ip);
     println!("{:?}", config.port);
+    // println!("{:?}", config.keys.travis.as_ref().unwrap());
     println!("{:?}", config.page.font);
     println!("{:?}", config.page.margin);
     println!("{:?}", config.paragraph.margin);
     println!("{:?}", config.paragraph.font);
-    // println!("{:?}", config.keys.travis.as_ref().unwrap());
+    println!("{:?}", config.h1.margin);
+    println!("{:?}", config.h1.font);
 }
