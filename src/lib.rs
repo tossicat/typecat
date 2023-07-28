@@ -9,6 +9,7 @@ mod markdown_parser;
 mod file_types;
 mod themes;
 mod toml_parser;
+mod test_table_parser;
 
 pub fn validate(file_names: &[String]) -> Result<Vec<String>, String> {
     file_types::validate(file_names.to_vec())
@@ -28,4 +29,8 @@ pub fn parse_toml(contents: String) {
 
 pub fn markdown_parser() {
     markdown_parser::parse_markdown();
+}
+
+pub fn test_table_parser() {
+    test_table_parser::parse_table();
 }

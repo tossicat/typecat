@@ -1,0 +1,31 @@
+// 관련 링크
+// 
+// https://docs.github.com/ko/get-started/writing-on-github/working-with-advanced-formatting/organizing-information-with-tables
+// 
+// 기본 형
+// 
+// | First Header  | Second Header |
+// | ------------- | ------------- |
+// | Content Cell  | Content Cell  |
+// | Content Cell  | Content Cell  |
+// 
+// 확장 형
+// 
+// | Left-aligned | Center-aligned | Right-aligned |
+// | :---         |     :---:      |          ---: |
+// | git status   | git status     | git status    |
+// | git diff     | git diff       | git diff      |
+
+WHITESPACE = _{ " " }
+string = { char* }
+char = _{ !("|" | ":" | "-" | WHITESPACE) ~ ANY }
+
+// 우선 특정 기능을 하는 2번째 줄을 제외한 나머지 줄을 파싱합니다. 
+table_nomal_line = { "|"{1} ~ string ~ ("|"{1} ~ string)* ~ "|"{1} }
+nomal_aligned = {!":" ~ "-"* ~ !":"} 
+left_aligned = {":" ~ "-"*}
+right_aligned = {"-"* ~ ":"}
+center_aligned = {":" ~ "-"* ~ ":"}
+aligned = {(nomal_aligned | left_aligned | right_aligned | center_aligned)}
+table_2ed_line = { "|"{1} ~ aligned ~ ("|"{1} ~ aligned)* ~ "|"{1}}
+table = {(table_nomal_line | table_2ed_line)}
