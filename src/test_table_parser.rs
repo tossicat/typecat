@@ -12,6 +12,6 @@ pub fn parse_table() {
     println!("{:?}", successful_parse);
 
     let unsuccessful_parse =
-        TableParser::parse(Rule::table, "| --- | :------ | :------: | ------: | \n");
+        TableParser::parse(Rule::table, "| --- | :------ | ------: | :------: | \n");
     println!("{:?}", unsuccessful_parse);
 }
