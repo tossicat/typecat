@@ -28,14 +28,14 @@ fn main() {
     };
     // CMD로 작동하기 위한 코드 끝
 
-    // toml 형식 파일 테스트 시작
+    // toml 형식 파일 테스트 시작 -> 에러가 발생합니다..!
     // let toml_file_name = "test.toml";
-    let toml_file_name = "default.toml";
-    let test = read_theme_file(&toml_file_name.to_owned());
-    match test {
-        Ok(s) => println!("{:?}", parse_toml(s)),
-        Err(e) => println!("{:?}", e),
-    };
+    // let toml_file_name = "default.toml";
+    // let test = read_theme_file(&toml_file_name.to_owned());
+    // match test {
+    //     Ok(s) => println!("{:?}", parse_toml(s)),
+    //     Err(e) => println!("{:?}", e),
+    // };
     // toml 형식 파일 테스트 끝
 
     // table 파서 테스트 시작

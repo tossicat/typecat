@@ -6,18 +6,19 @@ SYMBOLS = { SYMBOL+ }
 PUNCTUATED = { PUNCTUATION{1} }
 
 //style
-BOID = { "**" | "__" }
+BOLD = { "**" | "__" }
 ITALIC = { "*" | "_" }
 STRIKETHROUGH = { "~~" }
-BOIDITALIC = { "***" }
+BOLDITALIC = { "***" }
 OPEN_SUBSCRIPT = { "<sub>" }
 CLOSED_SUBSCRIPT = { "</sub>" }
 OPEN_SUPERSCRIPT = { "<sup>" } 
 CLOSED_SUPERSCRIPT = { "</sup>" }
 
 //paragraph
-STYLED = { ( BOIDITALIC | BOID | ITALIC | STRIKETHROUGH | OPEN_SUBSCRIPT | CLOSED_SUBSCRIPT | OPEN_SUPERSCRIPT | CLOSED_SUPERSCRIPT ) }
-SENTENCE = { ( STYLED | LETTERS | NUMBERS | SYMBOLS | PUNCTUATED )* }
+STYLED = { ( BOLDITALIC | BOLD | ITALIC | STRIKETHROUGH | OPEN_SUBSCRIPT | CLOSED_SUBSCRIPT | OPEN_SUPERSCRIPT | CLOSED_SUPERSCRIPT ) }
+SENTENCE = { ( STYLED | LETTERS | NUMBERS | SYMBOLS | PUNCTUATED ) }
+LINE = { ( SENTENCE )* } 
 
 //header
 H1 = @{ "#"{1} ~ WHITESPACE+ }
@@ -25,7 +26,20 @@ H2 = @{ "#"{2} ~ WHITESPACE+ }
 H3 = @{ "#"{3} ~ WHITESPACE+ }
 H4 = @{ "#"{4} ~ WHITESPACE+ }
 H5 = @{ "#"{5} ~ WHITESPACE+ }
-HEADER = { ( H1 | H2 | H3 | H4 | H5 ) ~ SENTENCE }
+HEADER = { ( H1 | H2 | H3 | H4 | H5 ) ~ LINE }
+
+//table
+TABLE_SYMBOLS = _{ ("|" | ":" | WHITESPACE) }
+TABLE_WORD = { (!(TABLE_SYMBOLS) ~ SENTENCE)* }
+TABLE_LINE = { "|"{1} ~ TABLE_WORD ~ ("|"{1} ~ TABLE_WORD )* ~ "|"{1} }
+NOMAL_ALIGNED = {!":" ~ "-"* ~ !":"} 
+CENTER_ALIGNED = {":" ~ "-"* ~ ":"}
+LEFT_ALIGNED = {":" ~ "-"* ~ !":"}
+RIGHT_ALIGNED = {!":" ~ "-"* ~ ":"}
+ALIGNED = { ( NOMAL_ALIGNED | CENTER_ALIGNED | LEFT_ALIGNED | RIGHT_ALIGNED ) }
+TABLE_ALIGN = { "|"{1} ~ ALIGNED ~ ("|"{1} ~ ALIGNED)* ~ "|"{1} }
+
+
 
 //final
-FILE = {SOI ~ (( HEADER | SENTENCE )? ~ NEWLINE)* ~ EOI }
+FILE = {SOI ~ (( HEADER | TABLE_ALIGN | TABLE_LINE | LINE )? ~ NEWLINE)* ~ EOI }
