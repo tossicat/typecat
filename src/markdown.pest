@@ -17,7 +17,7 @@ CLOSED_SUPERSCRIPT = { "</sup>" }
 
 //paragraph
 STYLED = { ( BOLDITALIC | BOLD | ITALIC | STRIKETHROUGH | OPEN_SUBSCRIPT | CLOSED_SUBSCRIPT | OPEN_SUPERSCRIPT | CLOSED_SUPERSCRIPT ) }
-SENTENCE = { ( STYLED | LETTERS | NUMBERS | SYMBOLS | PUNCTUATED ) }
+SENTENCE = _{ ( STYLED | LETTERS | NUMBERS | SYMBOLS | PUNCTUATED ) }
 LINE = { ( SENTENCE )* } 
 
 //header
@@ -26,7 +26,8 @@ H2 = @{ "#"{2} ~ WHITESPACE+ }
 H3 = @{ "#"{3} ~ WHITESPACE+ }
 H4 = @{ "#"{4} ~ WHITESPACE+ }
 H5 = @{ "#"{5} ~ WHITESPACE+ }
-HEADER = { ( H1 | H2 | H3 | H4 | H5 ) ~ LINE }
+H6 = @{ "#"{6} ~ WHITESPACE+ }
+HEADER = { ( H1 | H2 | H3 | H4 | H5 | H6 ) ~ LINE }
 
 //table
 TABLE_SYMBOLS = _{ ("|" | ":" | WHITESPACE) }
@@ -36,10 +37,8 @@ NOMAL_ALIGNED = {!":" ~ "-"* ~ !":"}
 CENTER_ALIGNED = {":" ~ "-"* ~ ":"}
 LEFT_ALIGNED = {":" ~ "-"* ~ !":"}
 RIGHT_ALIGNED = {!":" ~ "-"* ~ ":"}
-ALIGNED = { ( NOMAL_ALIGNED | CENTER_ALIGNED | LEFT_ALIGNED | RIGHT_ALIGNED ) }
+ALIGNED = _{ ( NOMAL_ALIGNED | CENTER_ALIGNED | LEFT_ALIGNED | RIGHT_ALIGNED ) }
 TABLE_ALIGN = { "|"{1} ~ ALIGNED ~ ("|"{1} ~ ALIGNED)* ~ "|"{1} }
-
-
 
 //final
 FILE = {SOI ~ (( HEADER | TABLE_ALIGN | TABLE_LINE | LINE )? ~ NEWLINE)* ~ EOI }

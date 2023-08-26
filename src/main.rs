@@ -38,14 +38,6 @@ fn main() {
     // };
     // toml 형식 파일 테스트 끝
 
-    // table 파서 테스트 시작
-    println!("");
-    println!("#### table 파서 테스트 시작 ####");
-    test_table_parser();
-    println!("#### table 파서 테스트 끝 ####");
-    println!("");
-    // table 파서 테스트 끝
-
     // 마크다운 파서 테스트 시작
     markdown_parser();
     // 마크다운 파서 테스트 끝
