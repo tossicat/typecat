@@ -1,0 +1,5 @@
+WHITESPACE = _{ " " }
+op = { ">" }
+a = @{ CASED_LETTER+ }
+b = {(op ~ WHITESPACE)* ~ a}
+c = {(op)* ~ b}
