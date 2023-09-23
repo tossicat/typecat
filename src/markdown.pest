@@ -1,59 +1,67 @@
-//function
-WHITESPACE = _{ " " }
-NEWLINES = { NEWLINE+ }
-LETTERS = _{ LETTER+ }
-NUMBERS = _{ NUMBER+ }
-SYMBOLS = _{ SYMBOL+ }
+// function
+WHITESPACE   = _{ " " }
+NEWLINES     =  { NEWLINE+ }
+LETTERS      = _{ LETTER+ }
+NUMBERS      = _{ NUMBER+ }
+SYMBOLS      = _{ SYMBOL+ }
 PUNCTUATIONS = _{ PUNCTUATION+ }
-CONTENTS = { ( LETTERS | NUMBERS | SYMBOLS | PUNCTUATIONS ) }
+CONTENTS     =  { (LETTERS | NUMBERS | SYMBOLS | PUNCTUATIONS) }
 
-//style
-BOLD = { "**" | "__" }
-ITALIC = { "*" | "_" }
-QUOTE_CODE = { "`" }
-STRIKETHROUGH = { "~~" }
-BOLDITALIC = { "***" }
-OPEN_SUBSCRIPT = { "<sub>" }
-CLOSED_SUBSCRIPT = { "</sub>" }
-OPEN_SUPERSCRIPT = { "<sup>" } 
+// style
+BOLD               = { "**" | "__" }
+ITALIC             = { "*" | "_" }
+QUOTE_CODE         = { "`" }
+STRIKETHROUGH      = { "~~" }
+BOLDITALIC         = { "***" }
+OPEN_SUBSCRIPT     = { "<sub>" }
+CLOSED_SUBSCRIPT   = { "</sub>" }
+OPEN_SUPERSCRIPT   = { "<sup>" }
 CLOSED_SUPERSCRIPT = { "</sup>" }
 
+// link
+LINK_SYMBOLS =  { ("[" | "]" | "(" | ")") }
+LINK_WORD    = _{ !LINK_SYMBOLS ~ (SENTENCE) }
+LINK_TEXT    =  { "[" ~ LINK_WORD* ~ "]" }
+LINK_URL     =  { "(" ~ LINK_WORD* ~ ")" }
+LINK         =  { LINK_TEXT ~ LINK_URL }
 
-//paragraph
-STYLED = { ( BOLDITALIC | BOLD | ITALIC | QUOTE_CODE | STRIKETHROUGH | OPEN_SUBSCRIPT | CLOSED_SUBSCRIPT | OPEN_SUPERSCRIPT | CLOSED_SUPERSCRIPT ) }
-SENTENCE = _{ ( STYLED | CONTENTS ) }
-LINE = { ( SENTENCE )* ~ NEWLINE } 
+// paragraph
+STYLED     =  { (BOLDITALIC | BOLD | ITALIC | QUOTE_CODE | STRIKETHROUGH | OPEN_SUBSCRIPT | CLOSED_SUBSCRIPT | OPEN_SUPERSCRIPT | CLOSED_SUPERSCRIPT) }
+SENTENCE   = _{ (STYLED | CONTENTS) }
+NOMAL_LINE = _{ (LINK | SENTENCE)* ~ NEWLINE }
+END_LINE   = _{ NEWLINE? ~ (LINK | SENTENCE)+ }
+LINE       =  { NOMAL_LINE | END_LINE }
 
-//header
-H1 = @{ "#"{1} ~ WHITESPACE+ }
-H2 = @{ "#"{2} ~ WHITESPACE+ }
-H3 = @{ "#"{3} ~ WHITESPACE+ }
-H4 = @{ "#"{4} ~ WHITESPACE+ }
-H5 = @{ "#"{5} ~ WHITESPACE+ }
-H6 = @{ "#"{6} ~ WHITESPACE+ }
-HEADER = { ( H1 | H2 | H3 | H4 | H5 | H6 ) ~ LINE }
+// header
+H1     = @{ "#"{1} ~ WHITESPACE+ }
+H2     = @{ "#"{2} ~ WHITESPACE+ }
+H3     = @{ "#"{3} ~ WHITESPACE+ }
+H4     = @{ "#"{4} ~ WHITESPACE+ }
+H5     = @{ "#"{5} ~ WHITESPACE+ }
+H6     = @{ "#"{6} ~ WHITESPACE+ }
+HEADER =  { (H1 | H2 | H3 | H4 | H5 | H6) ~ LINE }
 
-//table
-TABLE_SYMBOLS = _{ ("|" | ":" | WHITESPACE) }
-TABLE_WORD = { (!(TABLE_SYMBOLS) ~ ( LETTERS | NUMBERS | SYMBOLS | PUNCTUATIONS ))* }
-TABLE_LINE = { NEWLINE? ~ "|"{1} ~ TABLE_WORD ~ ("|"{1} ~ TABLE_WORD )* ~ "|"{1}}
-NOMAL_ALIGNED = {!":" ~ "-"* ~ !":"} 
-CENTER_ALIGNED = {":" ~ "-"* ~ ":"}
-LEFT_ALIGNED = {":" ~ "-"* ~ !":"}
-RIGHT_ALIGNED = {!":" ~ "-"* ~ ":"}
-ALIGNED = _{ ( NOMAL_ALIGNED | CENTER_ALIGNED | LEFT_ALIGNED | RIGHT_ALIGNED ) }
-TABLE_ALIGN = { NEWLINE? ~ "|"{1} ~ ALIGNED ~ ("|"{1} ~ ALIGNED)* ~ "|"{1} }
+// table
+TABLE_SYMBOLS  = _{ ("|" | ":" | WHITESPACE) }
+TABLE_WORD     =  { (!(TABLE_SYMBOLS) ~ (LETTERS | NUMBERS | SYMBOLS | PUNCTUATIONS))* }
+TABLE_LINE     =  { NEWLINE? ~ "|"{1} ~ TABLE_WORD ~ ("|"{1} ~ TABLE_WORD)* ~ "|"{1} }
+NOMAL_ALIGNED  =  { !":" ~ "-"* ~ !":" }
+CENTER_ALIGNED =  { ":" ~ "-"* ~ ":" }
+LEFT_ALIGNED   =  { ":" ~ "-"* ~ !":" }
+RIGHT_ALIGNED  =  { !":" ~ "-"* ~ ":" }
+ALIGNED        = _{ (NOMAL_ALIGNED | CENTER_ALIGNED | LEFT_ALIGNED | RIGHT_ALIGNED) }
+TABLE_ALIGN    =  { NEWLINE? ~ "|"{1} ~ ALIGNED ~ ("|"{1} ~ ALIGNED)* ~ "|"{1} }
 
-//code block
-BLOCK = _{ "`"{3} }
-CODE = _{ (!(BLOCK) ~ ( CONTENTS | NEWLINES ))* }
-CODE_BLOCK = { NEWLINE ~ BLOCK ~ NEWLINE ~ CODE ~ BLOCK }
+// code block
+BLOCK      = _{ "`"{3} }
+CODE       = _{ (!(BLOCK) ~ (CONTENTS | NEWLINES))* }
+CODE_BLOCK =  { NEWLINE ~ BLOCK ~ NEWLINE ~ CODE ~ BLOCK }
 
-//lists
-LIST_SYMBOLS = _{ ("*" | "-" | "+") }
-ORDERD_SYMBOLS = _{ NUMBER{1} ~ "."}
-LIST = { NEWLINE? ~ LIST_SYMBOLS ~ SENTENCE*}
-ORDERD_LIST = { NEWLINE? ~ ORDERD_SYMBOLS ~ SENTENCE*}
+// lists
+LIST_SYMBOLS   = _{ ("*" | "-" | "+") }
+ORDERD_SYMBOLS = _{ NUMBER{1} ~ "." }
+LIST           =  { NEWLINE? ~ LIST_SYMBOLS ~ SENTENCE* }
+ORDERD_LIST    =  { NEWLINE? ~ ORDERD_SYMBOLS ~ SENTENCE* }
 
-//final
-FILE = {SOI ~ ( HEADER | LIST | ORDERD_LIST | TABLE_ALIGN | TABLE_LINE | CODE_BLOCK | LINE )* ~ EOI }
+// final
+FILE = { SOI ~ (HEADER | LIST | ORDERD_LIST | TABLE_ALIGN | TABLE_LINE | CODE_BLOCK | LINE)* ~ EOI }

@@ -25,13 +25,13 @@
 
 ```
 sadfghj
-
 ```
 
 list
 
-  - 리스트 *테스트*
-  - 네스티드
+- 리스트 *테스트*
+    - 네스티드
+
 - 리스트2
   1. 이것도
   2. 가능한가? 
@@ -39,3 +39,10 @@ list
     1. 테스트
     2. 순서 테스트
     3. 가능한가?
+
+This site was built using.
+
+debug: 링크 뒤에 /가 오면 파싱이 제대로 안되는 문제 해결 필요
+This site was built using [GitHub *Pages*](https://pages.github.com).
+
+asdfghj[dsafgh](sadfg).
