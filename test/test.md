@@ -42,7 +42,6 @@ debug: 네스티드 리스트를 어떻게 처리할지 고민 필요
 
 This site was built using.
 
-debug: 링크 뒤에 /가 오면 파싱이 제대로 안되는 문제 해결 필요
 This site was built using [GitHub *Pages*](https://pages.github.com).
 
 asdfghj[dsafgh](sadfg).

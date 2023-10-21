@@ -4,8 +4,8 @@ NEWLINES     =  { NEWLINE+ }
 LETTERS      = _{ LETTER+ }
 NUMBERS      = _{ NUMBER+ }
 SYMBOLS      = _{ SYMBOL+ }
-PUNCTUATIONS = _{ PUNCTUATION+ }
-CONTENTS     =  { (LETTERS | NUMBERS | SYMBOLS | PUNCTUATIONS) }
+PUNCTUATIONS = _{ "/" | PUNCTUATION+ }
+CONTENTS     =  { ( LETTERS | NUMBERS | SYMBOLS | PUNCTUATIONS ) }
 
 // style
 BOLD               = { "**" | "__" }
@@ -20,7 +20,7 @@ CLOSED_SUPERSCRIPT = { "</sup>" }
 
 // link
 LINK_SYMBOLS =  { ("[" | "]" | "(" | ")") }
-LINK_WORD    = _{ !LINK_SYMBOLS ~ (SENTENCE) }
+LINK_WORD    = _{ (!LINK_SYMBOLS ~ (SENTENCE)) }
 LINK_TEXT    =  { "[" ~ LINK_WORD* ~ "]" }
 LINK_URL     =  { "(" ~ LINK_WORD* ~ ")" }
 LINK         =  { LINK_TEXT ~ LINK_URL }
