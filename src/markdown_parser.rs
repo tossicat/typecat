@@ -52,7 +52,18 @@ fn parse_header(header: Pair<Rule>) {
 }
 
 fn parse_line(content: Pair<Rule>) {
-    //contents, styled, link
+    //STYLED, LINK
+    println!("{:?}", content);
+}
+
+fn _parse_styled(content: Pair<Rule>) {
+    //BOLD, ITALIC, QUOTE_CODE, STRIKETHROUGH, BOLDITALIC ... CLOSED_SUPERSCRIPT
+    println!("{:?}", content);
+}
+
+//styled만 들어가면 된다
+fn _parse_link(content: Pair<Rule>) {
+    //LINK_TEXT, LINK_URL
     println!("{:?}", content);
 }
 
@@ -62,11 +73,12 @@ fn parse_table(content: Pair<Rule>) {
 }
 
 fn parse_code(content: Pair<Rule>) {
-    //contents, styled, link
+    //CONTENTS, NEWLINES
     println!("{:?}", content);
 }
 
+// NESTED 구현 로직 설계 필요
 fn parse_list(content: Pair<Rule>) {
-    //contents, styled, link
+    //LIST, ORDERD_LIST
     println!("{:?}", content);
 }
