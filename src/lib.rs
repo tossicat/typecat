@@ -10,6 +10,7 @@ mod file_types;
 mod themes;
 mod toml_parser;
 mod test_table_parser;
+mod models;
 
 pub fn validate(file_names: &[String]) -> Result<Vec<String>, String> {
     file_types::validate(file_names.to_vec())

@@ -2,6 +2,7 @@ use std::fs::read_to_string;
 extern crate pest;
 use pest::Parser;
 use pest::iterators::Pair;
+use crate::models::CONTENT;
 
 #[derive(Parser)]
 #[grammar = "markdown.pest"]
@@ -16,7 +17,6 @@ pub fn parse_markdown() {
     for line in file.into_inner() {
         match line.as_rule() {
             Rule::HEADER => {
-                println!("################################");
                 parse_header(line);
             },
             Rule::TABLE_ALIGN | Rule::TABLE_LINE => {
@@ -32,7 +32,6 @@ pub fn parse_markdown() {
                 parse_code(line);
             },
             Rule::LINE => {
-                println!("###############################");
                 parse_line(line);
             },
             _ => {}
@@ -46,19 +45,46 @@ fn parse_header(header: Pair<Rule>) {
             parse_line(line);
         }
         else {
-            println!("{:?}", line.as_rule());
+            let header_size = line.as_rule();
+            println!("{:?}", header_size);
         }
     }
 }
 
 fn parse_line(content: Pair<Rule>) {
     //STYLED, LINK
-    println!("{:?}", content);
+    let mut results: Vec<CONTENT> = vec![];
+
+    for line in content.into_inner(){
+
+        if line.as_rule() == Rule::CONTENTS {
+            let piece = CONTENT::Word(line.as_str().to_string());
+            results.push(piece);
+        }
+        else if line.as_rule() == Rule::STYLED {
+            let (k, w) = _parse_styled(line);
+            let style = CONTENT::Style {kind: k, word: w};
+            results.push(style);
+        }
+        else if line.as_rule() == Rule::LINK {
+        }
+        else if line.as_str() == "\n" {
+            println!("{:?}", line.as_rule());
+            results.push(CONTENT::Newline);
+        }
+    }
+    println!("{:?}", results);
 }
 
-fn _parse_styled(content: Pair<Rule>) {
-    //BOLD, ITALIC, QUOTE_CODE, STRIKETHROUGH, BOLDITALIC ... CLOSED_SUPERSCRIPT
-    println!("{:?}", content);
+fn _parse_styled(content: Pair<Rule>) -> (Rule, String) {
+    //BOLDITALIC | BOLD | ITALIC | QUOTE | SUBSCRIPT | SUPERSCRIPT
+    let mut k = Rule::STYLED;
+    let mut w = "";
+    for line in content.into_inner() {
+        k = line.as_rule();
+        w = line.into_inner().as_str();
+    }
+    return (k, w.to_string())
 }
 
 //styled만 들어가면 된다
