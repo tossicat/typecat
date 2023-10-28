@@ -127,13 +127,16 @@ fn is_2_files_extensions_md_or_toml(file_names: &[String]) -> Result<Vec<String>
 /// 파일 확장자가 필요한 확장지인지 확인하는 함수
 ///
 /// 만약 입력된 파일 이름에 들어 있는 확장자가 현재 필요한 확장자가 아니라면,
-///  `Err()`을 이용해 에러 메세지를 반환합니다.
-///  만약 같다면 `Ok(true)`을 반환하게 됩니다.
+/// `Err()`을 이용해 에러 메세지를 반환합니다.
+/// 만약 같다면 `Ok(true)`을 반환하게 됩니다.
+/// 참고로 `to_lowercase()`을 이용하는 이유는 확장자 대문자, 소문자를 구분해서
+/// 처리하는 것보다 단순하게 전체 문자열을 소문자로 바꿔서 처리하면 한 번에 해결할 수 있습니다. 
 pub fn identify_extension(file_name: &String, extension: &String) -> Result<bool, String> {
+    let file_name = file_name.to_lowercase();
     let path_extension = Path::new(&file_name);
     match path_extension.extension() {
         None => Err("No file extensions.".to_string()),
-        Some(path_extension) => match path_extension.to_str() == Some(extension) {
+        Some(path_extension) => match path_extension.to_str().unwrap() == extension {
             true => Ok(true),
             false => {
                 Err("The file extension is different from the extension you entered.".to_string())

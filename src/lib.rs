@@ -6,18 +6,18 @@ extern crate pest;
 #[macro_use]
 extern crate pest_derive;
 mod markdown_parser;
-mod file_types;
+mod file_manager;
 mod themes;
 mod toml_parser;
 mod test_table_parser;
 mod models;
 
 pub fn validate(file_names: &[String]) -> Result<Vec<String>, String> {
-    file_types::validate(file_names.to_vec())
+    file_manager::validate(file_names.to_vec())
 }
 
 pub fn identify_extension(file_name: &String, extension: &String) -> Result<bool, String> {
-    file_types::identify_extension(file_name, extension)
+    file_manager::identify_extension(file_name, extension)
 }
 
 pub fn read_theme_file(file_name: &String) -> Result<String, String> {
