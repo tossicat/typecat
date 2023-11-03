@@ -196,6 +196,51 @@ mod tests {
             Result::Err("No file extensions.".to_string()),
             identify_extension(&temp_path.to_string(), &"toml".to_string())
         );
+        // 입력된 파일명에 확장자가 `md`형식이 들어 왔는지 확인하는 테스트입니다.
+        // 첫번째 파일명에는 `Md`와 같이 이상하게 확장자가 있습니다.
+        // 그러나 이것도 소문자로 바꾸면 `md`이기 때문에 `true`을 반환합니다.
+        // 두번째 파일명에는 `MD`와 같이 대문자로 들어 있기 때문에 무리없이 `true`을 반환
+        let temp_path = "themes/test.Md";
+        assert_eq!(
+            Result::Ok(true),
+            identify_extension(&temp_path.to_string(), &"md".to_string())
+        );
+        let temp_path = "themes/test.MD";
+        assert_eq!(
+            Result::Ok(true),
+            identify_extension(&temp_path.to_string(), &"md".to_string())
+        );
+        // 입력된 파일명에 확장자가 `md`형식이 들어 왔는지 확인하는 테스트입니다.
+        // 현재는 파일명에 `toml` 확장자가 들어 있기 때문에 `true`을 반환합니다.
+        let temp_path = "themes/test.md";
+        assert_eq!(
+            Result::Ok(true),
+            identify_extension(&temp_path.to_string(), &"md".to_string())
+        );
+        // 입력된 파일명에 확장자가 `md`형식이 들어 왔는지 확인하는 테스트입니다.
+        // 현재는 파일명의 확장자가 `toml`이 아니기 때문에 에러 메세지를 반환합니다.
+        let temp_path = "themes/test.m";
+        assert_eq!(
+            Result::Err(
+                "The file extension is different from the extension you entered.".to_string()
+            ),
+            identify_extension(&temp_path.to_string(), &"md".to_string())
+        );
+        // 입력된 파일명에 확장자가 `md`형식이 들어 왔는지 확인하는 테스트입니다.
+        // 현재는 파일명의 확장자가 `md`이 아니기 때문에 에러 메세지를 반환합니다.
+        let temp_path = "themes/test.toml";
+        assert_eq!(
+            Result::Err(
+                "The file extension is different from the extension you entered.".to_string()
+            ),
+            identify_extension(&temp_path.to_string(), &"md".to_string())
+        );
+        // 현재는 파일명에 확장자가 없기 때문에 `false`를 반환합니다.
+        let temp_path = "themes/test";
+        assert_eq!(
+            Result::Err("No file extensions.".to_string()),
+            identify_extension(&temp_path.to_string(), &"md".to_string())
+        );
     }
 
     #[test]
