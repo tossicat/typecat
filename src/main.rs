@@ -16,6 +16,8 @@ struct Cli {
 
 fn main() {
     // CMD로 작동하기 위한 코드 시작
+    // 사용법 아래와 같이 입력하면 됩니다.
+    // cargo run -- test.md default.toml
     let cli = Cli::parse();
     // println!("files_name: {:?}", cli.file_names);
     let temp = validate(&cli.file_names);
@@ -26,17 +28,6 @@ fn main() {
         }
         Err(e) => println!("{:?}", e),
     };
-    // CMD로 작동하기 위한 코드 끝
-
-    // toml 형식 파일 테스트 시작 -> 에러가 발생합니다..!
-    // let toml_file_name = "test.toml";
-    // let toml_file_name = "default.toml";
-    // let test = read_theme_file(&toml_file_name.to_owned());
-    // match test {
-    //     Ok(s) => println!("{:?}", parse_toml(s)),
-    //     Err(e) => println!("{:?}", e),
-    // };
-    // toml 형식 파일 테스트 끝
 
     // 마크다운 파서 테스트 시작
     markdown_parser();
