@@ -152,6 +152,20 @@ mod tests {
     #[test]
     fn _identify_extension() {
         // 입력된 파일명에 확장자가 `toml`형식이 들어 왔는지 확인하는 테스트입니다.
+        // 첫번째 파일명에는 `ToML`와 같이 이상하게 확장자가 있습니다.
+        // 그러나 이것도 소문자로 바꾸면 `toml`이기 때문에 `true`을 반환합니다.
+        // 두번째 파일명에는 `TOML`와 같이 대문자로 들어 있기 때문에 무리없이 `true`을 반환
+        let temp_path = "themes/test.ToML";
+        assert_eq!(
+            Result::Ok(true),
+            identify_extension(&temp_path.to_string(), &"toml".to_string())
+        );
+        let temp_path = "themes/test.TOML";
+        assert_eq!(
+            Result::Ok(true),
+            identify_extension(&temp_path.to_string(), &"toml".to_string())
+        );
+        // 입력된 파일명에 확장자가 `toml`형식이 들어 왔는지 확인하는 테스트입니다.
         // 현재는 파일명에 `toml` 확장자가 들어 있기 때문에 `true`을 반환합니다.
         let temp_path = "themes/test.toml";
         assert_eq!(
@@ -186,7 +200,7 @@ mod tests {
 
     #[test]
     fn _is_file_extensions_md_or_toml() {
-        // 입력된 파일명에 확장자가 `mt`이 들어 왔는지 확인하는 테스트입니다.
+        // 입력된 파일명에 확장자가 `md`이 들어 왔는지 확인하는 테스트입니다.
         // `Err`을 반환하는 경우가 2가지가 있지만, 한 가지는 나올 수 없는 경우이기 때문에
         // 테스트하지 않습니다. 테스트하는 함수 주석을 참고하세요.
         // 현재 파일명에 `md` 확장자가 들어 있기 때문에 `Ok(true)`을 반환해야 합니다.
