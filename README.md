@@ -8,6 +8,14 @@ MD 파일을 이용한 pdf 출력 구현
 - md -> docs
 - md -> hwp
 
+## 테스트 방법
+
+현재 개발중이기 때문에 적절하게 작동하지 않습니다. 이 프로젝트는 CLI(Command-Line Interface, 이하 커맨드 라인 인터페이스)에서 작동하는 앱을 만드는 프로젝트이기 때문에 다음과 같이 실행하시면 테스트를 할 수 있습니다.
+
+```rust
+cargo run -- test.md default.toml
+```
+
 ## markdown
 
 마크다운 파서는 아래 페이지를 바탕으로 개발되었습니다.
