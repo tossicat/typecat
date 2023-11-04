@@ -5,12 +5,12 @@
 extern crate pest;
 #[macro_use]
 extern crate pest_derive;
-mod markdown_parser;
 mod file_manager;
+mod markdown_parser;
+mod models;
+mod test_table_parser;
 mod themes;
 mod toml_parser;
-mod test_table_parser;
-mod models;
 
 pub fn validate(file_names: &[String]) -> Result<Vec<String>, String> {
     file_manager::validate(file_names.to_vec())

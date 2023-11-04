@@ -6,12 +6,16 @@ use pest_derive::Parser;
 pub struct TableParser;
 
 pub fn parse_table() {
-    let successful_parse =
-        TableParser::parse(Rule::TABLE_LINE, "| Command | Description | 3 Description | \n");
+    let successful_parse = TableParser::parse(
+        Rule::TABLE_LINE,
+        "| Command | Description | 3 Description | \n",
+    );
 
     println!("{:?}", successful_parse);
 
-    let unsuccessful_parse =
-        TableParser::parse(Rule::TABLE_ALIGN, "| --- | :------ | ------: | :------: | \n");
+    let unsuccessful_parse = TableParser::parse(
+        Rule::TABLE_ALIGN,
+        "| --- | :------ | ------: | :------: | \n",
+    );
     println!("{:?}", unsuccessful_parse);
 }

@@ -14,17 +14,17 @@ struct Cli {
 }
 // CMD로 작동하기 위한 코드 끝
 
-fn read_files(file_names:Vec<String>) -> (String, String){
+fn read_files(file_names: Vec<String>) -> (String, String) {
     if file_names.len() == 1 {
         println!("파일 이름이 하나밖에 없습니다.");
         println!("md_file_name: {:?}", file_names[0]);
-        let temp = read_theme_file(&file_names[1].to_owned());  
+        let temp = read_theme_file(&file_names[1].to_owned());
         ("sss".to_string(), "aaa".to_string())
-    } else{
+    } else {
         println!("파일 이름이 두 개!");
         println!("md_file_name: {:?}", file_names[0]);
         println!("toml_file_name: {:?}", file_names[1]);
-        let temp = read_theme_file(&file_names[1].to_owned());  
+        let temp = read_theme_file(&file_names[1].to_owned());
         println!("toml_file_content: {:?}", temp);
         match temp {
             Ok(e) => (e, "aaa".to_string()),

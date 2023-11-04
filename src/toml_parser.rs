@@ -12,26 +12,26 @@ pub struct Config {
     pub port: Option<u16>,
     pub page: Page,
     pub paragraph: Paragraph,
-    pub h1:H1,
+    pub h1: H1,
 }
 
 #[derive(Deserialize)]
 pub struct Page {
-    pub margin : i32,
+    pub margin: i32,
     pub font: String,
     // pub travis: Option<String>,
 }
 
 #[derive(Deserialize)]
 pub struct Paragraph {
-    pub margin : i32,
+    pub margin: i32,
     pub font: String,
     // pub travis: Option<String>,
 }
 
 #[derive(Deserialize)]
 pub struct H1 {
-    pub margin : i32,
+    pub margin: i32,
     pub font: String,
     // pub travis: Option<String>,
 }

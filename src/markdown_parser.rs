@@ -1,8 +1,8 @@
 use std::fs::read_to_string;
 extern crate pest;
-use pest::Parser;
+use crate::models::{FragmentType, Link, Word};
 use pest::iterators::Pair;
-use crate::models::CONTENT;
+use pest::Parser;
 
 #[derive(Parser)]
 #[grammar = "markdown.pest"]
@@ -18,62 +18,66 @@ pub fn parse_markdown() {
         match line.as_rule() {
             Rule::HEADER => {
                 parse_header(line);
-            },
+            }
             Rule::TABLE_ALIGN | Rule::TABLE_LINE => {
                 println!("###############################");
                 parse_table(line);
-            },
-            Rule::LIST |  Rule::ORDERD_LIST => {
+            }
+            Rule::LIST | Rule::ORDERD_LIST => {
                 println!("###############################");
                 parse_list(line);
-            },
+            }
             Rule::CODE_BLOCK => {
                 println!("###############################");
                 parse_code(line);
-            },
+            }
             Rule::LINE => {
-                parse_line(line);
-            },
+                println!("{:?}", parse_line(line));
+            }
             _ => {}
         }
     }
 }
 
 fn parse_header(header: Pair<Rule>) {
-    for line in header.into_inner(){
+    for line in header.into_inner() {
         if line.as_rule() == Rule::LINE {
-            parse_line(line);
-        }
-        else {
+            println!("{:?}", parse_line(line));
+        } else {
             let header_size = line.as_rule();
             println!("{:?}", header_size);
         }
     }
 }
 
-fn parse_line(content: Pair<Rule>) {
+fn parse_line(content: Pair<Rule>) -> Vec<FragmentType> {
     //STYLED, LINK
-    let mut results: Vec<CONTENT> = vec![];
 
-    for line in content.into_inner(){
+    let mut results: Vec<FragmentType> = vec![];
 
-        if line.as_rule() == Rule::CONTENTS {
-            let piece = CONTENT::Word(line.as_str().to_string());
-            results.push(piece);
-        }
-        else if line.as_rule() == Rule::STYLED {
-            let (k, w) = _parse_styled(line);
-            let style = CONTENT::Style {kind: k, word: w};
-            results.push(style);
-        }
-        else if line.as_rule() == Rule::LINK {
-        }
-        else if line.as_str() == "\n" {
-            println!("{:?}", line.as_rule());
-            results.push(CONTENT::Newline);
-        }
+    if content.as_str() == "\n" {
+        results.push(FragmentType::Newline);
+        return results;
     }
-    println!("{:?}", results);
+
+    for line in content.into_inner() {
+        if line.as_rule() == Rule::CONTENTS {
+            let piece = FragmentType::WORD(Word {
+                kind: Rule::CONTENTS,
+                text: line.as_str().to_string(),
+            });
+            results.push(piece);
+        } else if line.as_rule() == Rule::STYLED {
+            let (k, w) = _parse_styled(line);
+            let style = FragmentType::WORD(Word { kind: k, text: w });
+            results.push(style);
+        } else if line.as_rule() == Rule::LINK {
+        }
+        // let l = _parse_link(line);
+        // let link = FragmentType::LINK(l);
+        // results.push(link);
+    }
+    return results;
 }
 
 fn _parse_styled(content: Pair<Rule>) -> (Rule, String) {
@@ -84,13 +88,48 @@ fn _parse_styled(content: Pair<Rule>) -> (Rule, String) {
         k = line.as_rule();
         w = line.into_inner().as_str();
     }
-    return (k, w.to_string())
+    return (k, w.to_string());
 }
 
-//styled만 들어가면 된다
-fn _parse_link(content: Pair<Rule>) {
-    //LINK_TEXT, LINK_URL
-    println!("{:?}", content);
+fn _parse_link(content: Pair<Rule>) -> Link {
+    let mut results = Link::new();
+
+    for link in content.into_inner() {
+        if link.as_rule() == Rule::LINK_TEXT {
+            let text = _parse_link_text(link);
+            results.text = text;
+        } else if link.as_rule() == Rule::LINK_URL {
+            let url = _parse_link_url(link);
+            results.url = url;
+        }
+    }
+    return results;
+}
+
+fn _parse_link_text(link: Pair<Rule>) -> Vec<Word> {
+    let mut texts: Vec<Word> = vec![];
+    for word in link.into_inner() {
+        if word.as_rule() == Rule::CONTENTS {
+            let piece = Word {
+                kind: Rule::CONTENTS,
+                text: word.as_str().to_string(),
+            };
+            texts.push(piece);
+        } else if word.as_rule() == Rule::STYLED {
+            let (k, w) = _parse_styled(word);
+            let style = Word { kind: k, text: w };
+            texts.push(style);
+        }
+    }
+    return texts;
+}
+
+fn _parse_link_url(link: Pair<Rule>) -> String {
+    let mut urls = String::new();
+    for url in link.into_inner() {
+        urls.push_str(url.as_str());
+    }
+    return urls;
 }
 
 fn parse_table(content: Pair<Rule>) {
