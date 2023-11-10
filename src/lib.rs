@@ -12,12 +12,8 @@ mod test_table_parser;
 mod themes;
 mod toml_parser;
 
-pub fn validate(file_names: &[String]) -> Result<Vec<String>, String> {
-    file_manager::validate(file_names.to_vec())
-}
-
-pub fn identify_extension(file_name: &String, extension: &String) -> Result<bool, String> {
-    file_manager::identify_extension(file_name, extension)
+pub fn validate(file_names: &[String]) -> Result<(String, String), String> {
+    file_manager::is_2_files_extensions_md_or_toml(file_names)
 }
 
 pub fn read_theme_file(file_name: &String) -> Result<String, String> {
