@@ -11,7 +11,7 @@ use std::path::Path;
 enum FileType {
     Toml,
     Md,
-    Others,
+    None,
 }
 
 /// 파일 확장자가 필요한 확장지인지 확인하고 적절한 파일 이름 목록을 반환하는 함수
@@ -76,41 +76,55 @@ fn is_file_extensions_md_or_toml(file_name: &String) -> Result<FileType, String>
     }
 }
 
-/// 파일 2개의 확장자들이 `md` 또는 `TOML`인지 확인하는 함수
+/// 파일 2개의 확장자들이 `md` 또는 `TOML`인지 파악해
 ///
 /// 만약 입력된 파일 이름에 들어 있는 확장자가 `md` 또는 `TOML`가 아니라면,
-///  `Err()`을 이용해 에러 메세지를 반환합니다.
-///  만약 같다면 `Ok(true)`을 반환하게 됩니다.
-fn is_2_files_extensions_md_or_toml(file_names: &[String]) -> Result<Vec<String>, String> {
-    let mut file_type_list = [FileType::Others, FileType::Others];
-    let mut temp_result: Vec<String> = Vec::new();
+/// `Err()`을 이용해 에러 메세지를 반환합니다.
+/// 이미 `is_file_extensions_md_or_toml()`함수가 입력된 파일의 확장자가
+/// 이 두 확장자가 아니면 에러를 반환합니다. 따라서 이 함수에서는
+/// `Ok(FileType::None)`을 반환하지 않습니다. 결론적으로 `temp_return`에는
+/// `Ok(FileType::None)`이 들어갈 수 없습니다.
+///
+/// 참고로 아래 다음 조합은 모두 md 파일이 없는 조합이기 때문에
+/// 모두 "md format file is required."이라는 에러를 반환합니다.
+///
+/// `[FileType::Toml, FileType::Toml]`
+/// `[FileType::Toml, FileType::None]`
+/// `[FileType::None, FileType::Toml]`
+/// `[FileType::None, FileType::None]`
+///
+/// 따라서 모두 통합해서 처리합니다.
+
+pub fn is_2_files_extensions_md_or_toml(file_names: &[String]) -> Result<(String, String), String> {
+    let mut file_type_list = [FileType::None, FileType::None];
+    let mut temp_return: (String, String) = ("".to_string(), "".to_string());
     for (i, file_name) in file_names.iter().enumerate() {
+        // println!("file_name:{:?}", file_name);
         let temp_result = is_file_extensions_md_or_toml(file_name);
         match temp_result {
-            Ok(true) => {
+            Ok(FileType::Md) => {
                 file_type_list[i] = FileType::Md;
+                temp_return.0 = file_name.to_string();
             }
-            Ok(false) => {
+            Ok(FileType::Toml) => {
                 file_type_list[i] = FileType::Toml;
+                temp_return.1 = file_name.to_string();
             }
-            Err(e) => println!("Err: {:?}", e),
+            Ok(FileType::None) => {
+                file_type_list[i] = FileType::None;
+            }
+            Err(e) => return Err(e),
         };
     }
-    match file_type_list {
-        [FileType::Toml, FileType::Toml] => Err("All are TOML format files.".to_string()),
-        [FileType::Toml, FileType::Md] => {
-            temp_result.push(file_names[1].clone());
-            temp_result.push(file_names[0].clone());
-            Ok(temp_result)
-        }
-        [FileType::Md, FileType::Toml] => {
-            temp_result.push(file_names[0].clone());
-            temp_result.push(file_names[1].clone());
-            Ok(temp_result)
-        }
-        [FileType::Md, FileType::Md] => Err("All are MD format files.".to_string()),
-        _ => Err("Not even a md format file as a TOML format file!".to_string()),
-    }
+    let last_result = match file_type_list {
+        [FileType::Toml, FileType::Md] => Ok(temp_return),
+        [FileType::Md, FileType::Toml] => Ok(temp_return),
+        [FileType::Md, FileType::None] => Ok(temp_return),
+        [FileType::None, FileType::Md] => Ok(temp_return),
+        [FileType::Md, FileType::Md] => Err("Only one md format file is required.".to_string()),
+        _ => Err("md format file is required.".to_string()),
+    };
+    last_result
 }
 
 /// 파일 확장자가 필요한 확장지인지 확인하는 함수
