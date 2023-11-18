@@ -110,7 +110,7 @@ fn main() {
     match temp_string {
         Ok(m) => {
             println!("\n~~~ md 파일 내용 \n \n {} \n~~~", m.0);
-            println!("\n~~~ md 파일 내용 \n \n {} \n~~~", m.1);
+            println!("\n~~~ toml 파일 내용 \n \n {} \n~~~", m.1);
         }
         Err(_) => todo!(),
     }
