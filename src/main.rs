@@ -36,8 +36,7 @@ fn read_flie(file_name: &String) -> String {
 fn read_default_toml_file() -> String {
     let temp_path = D_T_FILE_LOC;
     println!("reading `{}`", temp_path);
-    let temp_toml = read_flie(&temp_path.to_string());
-    temp_toml
+    read_flie(&temp_path.to_string())
 }
 
 /// CMD로 입력된 파일을 읽어 오는 함수
@@ -73,7 +72,7 @@ fn read_files(file_names: Vec<String>) -> Result<(String, String), String> {
             println!("md_file_name:{}", e.0);
             let temp_md = read_flie(&e.0);
             temp_return.0 = temp_md;
-            if e.1 == "" {
+            if e.1.is_empty() {
                 println!("TOML 파일 이름을 입력하지 않았습니다.");
                 let temp_toml = read_default_toml_file();
                 temp_return.1 = temp_toml;

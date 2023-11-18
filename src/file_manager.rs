@@ -61,11 +61,11 @@ pub fn is_toml_file(file_name: &String) -> Result<(bool, bool), io::Error> {
 ///   `Err("No file extension.".to_string())`을 반환합니다.
 ///
 /// 결국 확장자가 `md`나 `TOML`가 아니면 에러를 반환합니다.
-fn is_file_extensions_md_or_toml(file_name: &String) -> Result<FileType, String> {
+fn is_file_extensions_md_or_toml(file_name: &str) -> Result<FileType, String> {
     let is_toml = identify_extension(file_name, &"toml".to_string());
     let is_md = identify_extension(file_name, &"md".to_string());
     if is_md == Some(true) {
-        return Ok(FileType::Md);
+        Ok(FileType::Md)
     } else if is_toml == Some(true) {
         return Ok(FileType::Toml);
     } else if is_md == Some(false) || is_toml == Some(false) {
@@ -115,15 +115,14 @@ pub fn is_2_files_extensions_md_or_toml(file_names: &[String]) -> Result<(String
             Err(e) => return Err(e),
         };
     }
-    let last_result = match file_type_list {
+    match file_type_list {
         [FileType::Toml, FileType::Md] => Ok(temp_return),
         [FileType::Md, FileType::Toml] => Ok(temp_return),
         [FileType::Md, FileType::None] => Ok(temp_return),
         [FileType::None, FileType::Md] => Ok(temp_return),
         [FileType::Md, FileType::Md] => Err("Only one md format file is required.".to_string()),
         _ => Err("md format file is required.".to_string()),
-    };
-    last_result
+    }
 }
 
 /// 파일 확장자가 필요한 확장지인지 확인하는 함수
@@ -136,7 +135,7 @@ pub fn is_2_files_extensions_md_or_toml(file_names: &[String]) -> Result<(String
 /// 이때는 `None`을 반환하게 됩니다.
 /// 참고로 `to_lowercase()`을 이용하는 이유는 확장자 대문자, 소문자를 구분해서
 /// 처리하는 것보다 단순하게 전체 문자열을 소문자로 바꿔서 처리하면 한 번에 해결할 수 있습니다.
-pub fn identify_extension(file_name: &String, extension: &String) -> Option<bool> {
+pub fn identify_extension(file_name: &str, extension: &String) -> Option<bool> {
     let file_name = file_name.to_lowercase();
     let path_extension = Path::new(&file_name);
     match path_extension.extension() {
