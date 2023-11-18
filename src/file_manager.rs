@@ -5,13 +5,46 @@
 //!  확장자(extension)가 적합한 것인지, 해당 파일이 들어 있는 폴더가 실재로 존재하는 것
 //! 인지 등을 다루고 있습니다.
 
-use std::path::Path;
+use std::{io, path::Path};
+
+use crate::DEFAULT_THEME_FOLDER;
 
 #[derive(Debug, PartialEq)]
 enum FileType {
     Toml,
     Md,
     None,
+}
+
+/// 입력된 `TOML` 파일이 있는지 없는지 검사하는 함수
+///
+/// 만약 입력된 파일 이름이 현재 폴더에
+/// 있으면
+/// 1 `Ok(true)`을 반환합니다.
+/// 없으면
+/// 2 `themes`라는 서브 폴더에 입력된 파일 이름이
+/// 있으면
+/// 2.1 `Ok(true)`을 반환합니다.
+/// 없으면
+/// 2.2 `Ok(false)`을 반환합니다.
+/// 결국 입력된 파일이 현재 폴더나 `themes` 폴더 안에
+/// 있으면 `Ok(true)`, 없으면 `Ok(false)`
+/// 문제가 있으면 에러를 반환합니다.
+pub fn is_toml_file(file_name: &String) -> Result<bool, io::Error> {
+    let temp_path = DEFAULT_THEME_FOLDER;
+    let is_temp_file_path = Path::new(&file_name).try_exists()?;
+    match is_temp_file_path {
+        true => Ok(true),
+        false => {
+            let temp_new_path = String::from(temp_path);
+            let temp_new_path = temp_new_path + "/" + &file_name;
+            let is_sub_temp_file_path = Path::new(&temp_new_path).try_exists()?;
+            match is_sub_temp_file_path {
+                true => Ok(true),
+                false => Ok(false),
+            }
+        }
+    }
 }
 
 /// 파일 1개의 확장자가 `md` 또는 `TOML`인지 확인하는 함수
@@ -103,7 +136,7 @@ pub fn is_2_files_extensions_md_or_toml(file_names: &[String]) -> Result<(String
 /// 이때는 `None`을 반환하게 됩니다.
 /// 참고로 `to_lowercase()`을 이용하는 이유는 확장자 대문자, 소문자를 구분해서
 /// 처리하는 것보다 단순하게 전체 문자열을 소문자로 바꿔서 처리하면 한 번에 해결할 수 있습니다.
-fn identify_extension(file_name: &String, extension: &String) -> Option<bool> {
+pub fn identify_extension(file_name: &String, extension: &String) -> Option<bool> {
     let file_name = file_name.to_lowercase();
     let path_extension = Path::new(&file_name);
     match path_extension.extension() {
