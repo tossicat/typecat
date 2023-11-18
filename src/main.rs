@@ -30,9 +30,9 @@ fn read_flie(file_name: &String) -> String {
 }
 
 /// 디폴트 toml 파일을 읽어 오는 함수
-/// 
+///
 /// 이 함수를 따로 만든 이유는 디폴트 toml 파일을 읽어 온다는
-/// 것을 표시하기 위한 `println!()`이 필요하기 때문입니다. 
+/// 것을 표시하기 위한 `println!()`이 필요하기 때문입니다.
 fn read_default_toml_file() -> String {
     let temp_path = D_T_FILE_LOC;
     println!("reading `{}`", temp_path);
@@ -60,66 +60,61 @@ fn read_default_toml_file() -> String {
 /// `cargo run test/pdf.md`
 ///
 /// 실행한다면 미리 만들어서 저장되어 있는 `themes/default.toml`을 읽어와 사용하게 됩니다.
-/// 참고로 `TOML` 형식의 파일은 폴더를 입력하지 않고 파일 이름만 입력해도 
+/// 참고로 `TOML` 형식의 파일은 폴더를 입력하지 않고 파일 이름만 입력해도
 /// 자동적으로 `themes` 폴더 안에도 있는지 확인한 후, 있으면 이 폴더 안에 들어 있는 파일을 열고
 /// 이 폴더에도 없으면 `themes/default.toml`을 읽어와 사용하게 됩니다.
 
-fn read_files(file_names: Vec<String>) {
+fn read_files(file_names: Vec<String>) -> Result<(String, String), String> {
     let file_name_list = validate(&file_names);
     // println!("file_name_list:{:?}", file_name_list);
+    let mut temp_return: (String, String) = ("".to_string(), "".to_string());
     match file_name_list {
         Ok(e) => {
+            println!("md_file_name:{}", e.0);
             let temp_md = read_flie(&e.0);
-            println!(
-                "\n md 파일 이름: {} \n \n~~~ 파일 내용 \n \n {} \n~~~ \n",
-                e.0, temp_md
-            );
+            temp_return.0 = temp_md;
             if e.1 == "" {
                 println!("TOML 파일 이름을 입력하지 않았습니다.");
                 let temp_toml = read_default_toml_file();
-                println!(
-                    "\n toml 파일 이름: {} \n \n~~~ 파일 내용 \n \n {} \n~~~ \n",
-                    e.1, temp_toml
-                );
+                temp_return.1 = temp_toml;
             } else {
+                println!("toml_file_name:{}", e.0);
                 let is_toml_file = validate_toml_file(&e.1);
                 match is_toml_file {
                     Ok(m) => match m {
                         (true, false) => {
                             let temp_toml = read_flie(&e.1);
-                            println!(
-                                "\n toml 파일 이름: {} \n \n~~~ 파일 내용 \n \n {} \n~~~ \n",
-                                e.1, temp_toml
-                            );
+                            temp_return.1 = temp_toml;
                         }
                         (false, true) => {
                             let temp_toml = read_default_toml_file();
-                            println!(
-                                "\n toml 파일 이름: {} \n \n~~~ 파일 내용 \n \n {} \n~~~ \n",
-                                e.1, temp_toml
-                            );
+                            temp_return.1 = temp_toml;
                         }
                         _ => println!("{} 파일이 있습니까?", e.1),
                     },
-                    Err(_) => {
-                        todo!()
-                    }
+                    Err(e) => return Err(e.to_string()),
                 }
-                println!("TOML 파일 이름:{}", e.1);
             }
         }
-        Err(e) => println!("Error:{}", e),
+        Err(e) => return Err(e),
     }
+    Ok(temp_return)
 }
 
 fn main() {
     // CMD로 작동하기 위한 코드 시작
     // 사용법 아래와 같이 입력하면 됩니다.
-    // cargo run -- test.md default.toml
+    // cargo run test/pdf.md test.toml
     let cli = Cli::parse();
     println!("files_names: {:?}", cli.file_names);
-    read_files(cli.file_names);
-
+    let temp_string = read_files(cli.file_names);
+    match temp_string {
+        Ok(m) => {
+            println!("\n~~~ md 파일 내용 \n \n {} \n~~~", m.0);
+            println!("\n~~~ md 파일 내용 \n \n {} \n~~~", m.1);
+        }
+        Err(_) => todo!(),
+    }
     // 마크다운 파서 테스트 시작
     markdown_parser();
     // 마크다운 파서 테스트 끝
