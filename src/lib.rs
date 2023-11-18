@@ -29,7 +29,7 @@ pub fn validate(file_names: &[String]) -> Result<(String, String), String> {
     file_manager::is_2_files_extensions_md_or_toml(file_names)
 }
 
-pub fn validate_toml_file(file_names: &String) -> Result<bool, io::Error> {
+pub fn validate_toml_file(file_names: &String) -> Result<(bool, bool), io::Error> {
     file_manager::is_toml_file(file_names)
 }
 

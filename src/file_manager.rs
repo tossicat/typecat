@@ -20,28 +20,28 @@ enum FileType {
 ///
 /// 만약 입력된 파일 이름이 현재 폴더에
 /// 있으면
-/// 1 `Ok(true)`을 반환합니다.
+/// 1 `Ok((true, false))`을 반환합니다.
 /// 없으면
 /// 2 `themes`라는 서브 폴더에 입력된 파일 이름이
 /// 있으면
-/// 2.1 `Ok(true)`을 반환합니다.
+/// 2.1 `Ok((false, true))`을 반환합니다.
 /// 없으면
-/// 2.2 `Ok(false)`을 반환합니다.
-/// 결국 입력된 파일이 현재 폴더나 `themes` 폴더 안에
-/// 있으면 `Ok(true)`, 없으면 `Ok(false)`
+/// 2.2 `Ok((false, false))`을 반환합니다.
+/// 3 만약 현재 폴더와 `themes` 폴더 안에
+/// 없으면 `Ok((false, false))`을 반환합니다.
 /// 문제가 있으면 에러를 반환합니다.
-pub fn is_toml_file(file_name: &String) -> Result<bool, io::Error> {
+pub fn is_toml_file(file_name: &String) -> Result<(bool, bool), io::Error> {
     let temp_path = DEFAULT_THEME_FOLDER;
     let is_temp_file_path = Path::new(&file_name).try_exists()?;
     match is_temp_file_path {
-        true => Ok(true),
+        true => Ok((true, false)),
         false => {
             let temp_new_path = String::from(temp_path);
             let temp_new_path = temp_new_path + "/" + &file_name;
             let is_sub_temp_file_path = Path::new(&temp_new_path).try_exists()?;
             match is_sub_temp_file_path {
-                true => Ok(true),
-                false => Ok(false),
+                true => Ok((false, true)),
+                false => Ok((false, false)),
             }
         }
     }
