@@ -11,7 +11,6 @@ mod file_manager;
 mod markdown_parser;
 mod models;
 mod test_table_parser;
-mod themes;
 mod toml_parser;
 
 // 아래 두 상수는 원칙적으로는 `toml`이나 `ini` 형식의 파일로 설정을 저장하고
