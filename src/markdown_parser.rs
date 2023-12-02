@@ -8,16 +8,20 @@ use pest::Parser;
 #[grammar = "markdown.pest"]
 pub struct MarkdownParser;
 
-pub fn parse_markdown() {
+pub fn parse_markdown() -> Vec<(Rule, Vec<FragmentType>)> {
     let unparsed_file = read_to_string("test/pdf.md").expect("cannot read file");
     let file = MarkdownParser::parse(Rule::FILE, &unparsed_file)
         .expect("unsuccessful parse")
         .next()
         .unwrap();
+
+    let mut results = vec![];
+
     for line in file.into_inner() {
         match line.as_rule() {
             Rule::HEADER => {
-                parse_header(line);
+                let data = parse_header(line);
+                results.push(data);
             }
             Rule::TABLE_ALIGN | Rule::TABLE_LINE => {
                 println!("###############################");
@@ -32,22 +36,27 @@ pub fn parse_markdown() {
                 parse_code(line);
             }
             Rule::LINE => {
-                println!("{:?}", parse_line(line));
+                let data = parse_line(line);
+                results.push((Rule::LINE, data));
             }
             _ => {}
         }
     }
+    return results;
 }
 
-fn parse_header(header: Pair<Rule>) {
+fn parse_header(header: Pair<Rule>) -> (Rule, Vec<FragmentType>) {
+    let mut texts: Vec<FragmentType> = vec![];
+    let mut size = Rule::HEADER;
     for line in header.into_inner() {
         if line.as_rule() == Rule::LINE {
-            println!("{:?}", parse_line(line));
+            texts = parse_line(line);
         } else {
             let header_size = line.as_rule();
-            println!("{:?}", header_size);
+            size = header_size;
         }
     }
+    return (size, texts)
 }
 
 fn parse_line(content: Pair<Rule>) -> Vec<FragmentType> {
@@ -72,10 +81,10 @@ fn parse_line(content: Pair<Rule>) -> Vec<FragmentType> {
             let style = FragmentType::WORD(Word { kind: k, text: w });
             results.push(style);
         } else if line.as_rule() == Rule::LINK {
+            let l = _parse_link(line);
+            let link = FragmentType::LINK(l);
+            results.push(link);
         }
-        // let l = _parse_link(line);
-        // let link = FragmentType::LINK(l);
-        // results.push(link);
     }
     return results;
 }
