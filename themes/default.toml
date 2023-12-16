@@ -1,18 +1,27 @@
-ip = '127.0.0.1'
-port = 80
+global_integer = 80
 [h1]
 font = 'NanumGothic.ttf'
-size = 14
-[page]
+font_size = 14
 # 원칙적으로 여백은 위쪽, 아래쪽, 왼쪽, 오른쪽, 머리말, 꼬리말 있읍니다.
-# 지금은 모두 10으로 합니다.
-margin = 10
+left_margin = 10
+right_margin = 10
+top_margin = 10
+bottom_margin = 10
+# 들여 스기
+indent = 10
+[page]
 # 아래 폰트는 페이지의 default_font 폰트입니다.
 font = 'NanumGothic.ttf'
+font_size = 14
+# 단락 여백은 원칙적으로 여백은 위쪽, 아래쪽, 왼쪽, 오른쪽있읍니다.
+left_margin = 10
+right_margin = 10
+top_margin = 10
+bottom_margin = 10
 [paragraph]
+# 아래 폰트는 페이지의 default_font 폰트입니다.
+font = 'NanumGothic.ttf'
 # 단락 여백은 원칙적으로 여백은 위쪽, 아래쪽, 왼쪽, 오른쪽있읍니다.
 # 지금은 모두 10으로 합니다.
 margin = 10
-# 아래 폰트는 페이지의 default_font 폰트입니다.
-font = 'NanumGothic.ttf'
 size = 14
