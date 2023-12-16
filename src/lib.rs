@@ -12,6 +12,7 @@ mod markdown_parser;
 mod models;
 mod test_table_parser;
 mod toml_parser;
+mod pdf_compiler;
 
 // 아래 두 상수는 원칙적으로는 `toml`이나 `ini` 형식의 파일로 설정을 저장하고
 // 이를 프로그램이 실행될 때 읽어서 처리해야 하지만
@@ -42,4 +43,8 @@ pub fn markdown_parser() -> Vec<(markdown_parser::Rule, Vec<models::FragmentType
 
 pub fn test_table_parser() {
     test_table_parser::parse_table();
+}
+
+pub fn pdf_compiler(parsed_data: Vec<(markdown_parser::Rule, Vec<models::FragmentType>)>) {
+    pdf_compiler::compile(parsed_data);
 }

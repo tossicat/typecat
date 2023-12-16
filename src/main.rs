@@ -1,10 +1,12 @@
 use std::fs::File;
 use std::io::{BufReader, Read};
 
+use clap::error::ContextKind;
 use typecat::markdown_parser;
 use typecat::parse_toml;
 use typecat::test_table_parser;
 use typecat::validate;
+use typecat::pdf_compiler;
 use typecat::{validate_toml_file, D_T_FILE_LOC};
 
 // CMD로 작동하기 위한 코드 시작
@@ -117,5 +119,6 @@ fn main() {
     // 마크다운 파서 테스트 시작
     let parsed_data = markdown_parser();
     println!("{:?}", parsed_data);
+    pdf_compiler(parsed_data);
     // 마크다운 파서 테스트 끝
 }
