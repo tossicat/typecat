@@ -121,4 +121,18 @@ fn main() {
     println!("{:?}", parsed_data);
     pdf_compiler(parsed_data);
     // 마크다운 파서 테스트 끝
+    // CMD로 작동하기 위한 코드 시작
+    // 사용법 아래와 같이 입력하면 됩니다.
+    // cargo run test/pdf.md default.toml
+    let cli = Cli::parse();
+    println!("files_names: {:?}", cli.file_names);
+    let temp_string = read_files(cli.file_names);
+    match temp_string {
+        Ok(m) => {
+            println!("\n~~~ md 파일 내용 \n \n {} \n~~~", m.0);
+            println!("\n~~~ toml 파일 내용 \n \n {:?} \n~~~", m.1);
+            parse_toml(m.1);
+        }
+        Err(_) => todo!(),
+    }
 }
