@@ -38,7 +38,7 @@ pub fn parse_toml(contents: String) {
 }
 
 pub fn markdown_parser() -> Vec<(markdown_parser::Rule, Vec<models::FragmentType>)>{
-    return markdown_parser::parse_markdown();
+    markdown_parser::parse_markdown()
 }
 
 pub fn test_table_parser() {
