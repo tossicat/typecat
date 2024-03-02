@@ -15,7 +15,7 @@ pub fn compile(parsed_data: Vec<(Rule, Vec<FragmentType>)>) {
 
     // 한국어 폰트 테스트
     let mut font_reader =
-        std::io::Cursor::new(include_bytes!("../assets/fonts/NotoSerifCJKkr-Regular.otf").as_ref());
+        std::io::Cursor::new(include_bytes!("../assets/fonts/NanumGothic.ttf").as_ref());
     let font = doc.add_external_font(&mut font_reader).unwrap();
 
     current_layer.begin_text_section();
