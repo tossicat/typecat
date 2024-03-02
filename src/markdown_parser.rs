@@ -56,7 +56,7 @@ fn parse_header(header: Pair<Rule>) -> (Rule, Vec<FragmentType>) {
             size = header_size;
         }
     }
-    return (size, texts)
+    return (size, texts);
 }
 
 fn parse_line(content: Pair<Rule>) -> Vec<FragmentType> {

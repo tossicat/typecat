@@ -4,7 +4,7 @@ use crate::markdown_parser::Rule;
 pub enum FragmentType {
     WORD(Word),
     LINK(Link),
-    Newline
+    Newline,
 }
 
 #[derive(Debug)]
