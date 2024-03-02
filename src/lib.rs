@@ -10,7 +10,6 @@ extern crate pest_derive;
 mod file_manager;
 mod markdown_parser;
 mod models;
-mod pdf_compiler;
 mod pdf_printer;
 mod toml_parser;
 
