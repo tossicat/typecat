@@ -19,11 +19,20 @@ pub fn compile(parsed_data: Vec<(Rule, Vec<FragmentType>)>) {
     let font = doc.add_external_font(&mut font_reader).unwrap();
 
     current_layer.begin_text_section();
+    // top_margin
     y_val -= 30.0;
+    let left_margin = 5.0;
+    let right_margin = 5.0;
 
     for data in parsed_data {
-        current_layer = convert_text(current_layer, y_val, &font, data);
-        y_val -= 20.0;
+        let content = merge_sentence(data.1);
+        let font_size = set_font_size(data.0);
+        let lines = make_content_chunk(content, x_val - left_margin, right_margin, font_size);
+        for line in lines {
+            current_layer = convert_text(current_layer, line, font_size, left_margin, y_val, &font);
+            // 행간
+            y_val -= 10.0;
+        }
     }
     current_layer.end_text_section();
 
@@ -33,20 +42,50 @@ pub fn compile(parsed_data: Vec<(Rule, Vec<FragmentType>)>) {
 
 fn convert_text(
     current_layer: PdfLayerReference,
+    line: String,
+    font_size: f32,
+    left_margin: f32,
     y_val: f32,
-    font: &IndirectFontRef,
-    data: (Rule, Vec<FragmentType>),
+    font: &IndirectFontRef
 ) -> PdfLayerReference {
-    let content = merge_sentence(data.1);
-    let size = set_font_size(data.0);
-
-    current_layer.use_text(content, size, Mm(5.0), Mm(y_val), &font);
-
+    current_layer.use_text(line, font_size, Mm(left_margin), Mm(y_val), &font);
+    current_layer.add_line_break();
     return current_layer;
+    }
+
+fn make_content_chunk(content: String, x_val: f32, right_margin: f32, font_size: f32) -> Vec<String> {
+    // slice 값 바이트 기준으로 변경, byte index 176 is not a char boundary
+    let line_length = 76;
+    println!("{:?}", content.len());
+    let line_count = content.len()/line_length;
+    if line_count > 1 {
+        return split_content(line_count,line_length, content);
+    }
+    else {
+        return vec![content];
+    }
+}
+
+fn split_content(line_count: usize, line_length:usize, content: String) -> Vec<String> {
+    let mut lines = vec![];
+    let mut idx = 0;
+    for _i in 0..line_count+1 {
+        if content.len() >= idx+line_length {
+            let chunk = &content[idx..idx+line_length];
+            lines.push(chunk.to_string());
+            idx = idx + line_length;
+        }
+        else {
+            let chunk = &content[idx..];
+            lines.push(chunk.to_string());
+        }
+    }
+    return lines
 }
 
 fn set_font_size(icon: Rule) -> f32 {
     let mut size = 0.0;
+    // font_size
     match icon {
         Rule::H1 => size = 30.0,
         Rule::H2 => size = 28.0,
