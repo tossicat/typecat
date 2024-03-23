@@ -19,6 +19,9 @@ pub fn compile(parsed_data: Vec<(Rule, Vec<FragmentType>)>) {
     let font = doc.add_external_font(&mut font_reader).unwrap();
 
     current_layer.begin_text_section();
+    //자간 테스트
+    current_layer.set_character_spacing(0.0);
+
     // top_margin
     y_val -= 30.0;
     let left_margin = 5.0;
@@ -29,6 +32,7 @@ pub fn compile(parsed_data: Vec<(Rule, Vec<FragmentType>)>) {
         let font_size = set_font_size(data.0);
         let lines = make_content_chunk(content, x_val - left_margin, right_margin, font_size);
         for line in lines {
+            println!("{:?}", line);
             current_layer = convert_text(current_layer, line, font_size, left_margin, y_val, &font);
             // 행간
             y_val -= 10.0;
@@ -54,11 +58,10 @@ fn convert_text(
     }
 
 fn make_content_chunk(content: String, x_val: f32, right_margin: f32, font_size: f32) -> Vec<String> {
-    // slice 값 바이트 기준으로 변경, byte index 176 is not a char boundary
-    let line_length = 76;
-    println!("{:?}", content.len());
-    let line_count = content.len()/line_length;
-    if line_count > 1 {
+    // TO DO: 한 줄에 들어갈 수 있는 글자 수 계산하는 로직 필요
+    let line_length = 70;
+    let line_count = content.chars().count()/line_length;
+    if line_count > 0 {
         return split_content(line_count,line_length, content);
     }
     else {
@@ -69,15 +72,18 @@ fn make_content_chunk(content: String, x_val: f32, right_margin: f32, font_size:
 fn split_content(line_count: usize, line_length:usize, content: String) -> Vec<String> {
     let mut lines = vec![];
     let mut idx = 0;
+    let char_vec: Vec<char> = content.chars().collect();
     for _i in 0..line_count+1 {
-        if content.len() >= idx+line_length {
-            let chunk = &content[idx..idx+line_length];
-            lines.push(chunk.to_string());
+        if content.chars().count() >= idx+line_length {
+            let chunk = &char_vec[idx..idx+line_length];
+            let result: String = chunk.iter().collect();
+            println!("{:?}", result.len());
+            lines.push(result);
             idx = idx + line_length;
         }
         else {
-            let chunk = &content[idx..];
-            lines.push(chunk.to_string());
+            let chunk = &char_vec[idx..];
+            lines.push(chunk.iter().collect());
         }
     }
     return lines
