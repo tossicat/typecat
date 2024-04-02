@@ -19,23 +19,25 @@ pub fn compile(parsed_data: Vec<(Rule, Vec<FragmentType>)>) {
     let font = doc.add_external_font(&mut font_reader).unwrap();
 
     current_layer.begin_text_section();
-    //자간 테스트
-    current_layer.set_character_spacing(0.0);
 
     // top_margin
     y_val -= 30.0;
-    let left_margin = 5.0;
-    let right_margin = 5.0;
+    let left_margin = 12.0;
+    let right_margin = 12.0;
 
     for data in parsed_data {
         let content = merge_sentence(data.1);
         let font_size = set_font_size(data.0);
-        let lines = make_content_chunk(content, x_val - left_margin, right_margin, font_size);
+        let line_length = count_letter_per_line(x_val,left_margin, right_margin, font_size);
+        let lines = make_content_chunk(content, line_length);
         for line in lines {
             println!("{:?}", line);
+            // 행간
+            y_val -= font_size/4.0;
+
             current_layer = convert_text(current_layer, line, font_size, left_margin, y_val, &font);
             // 행간
-            y_val -= 10.0;
+            y_val -= font_size/4.0;
         }
     }
     current_layer.end_text_section();
@@ -52,24 +54,30 @@ fn convert_text(
     y_val: f32,
     font: &IndirectFontRef
 ) -> PdfLayerReference {
+    current_layer.set_line_height(font_size+2.0);
     current_layer.use_text(line, font_size, Mm(left_margin), Mm(y_val), &font);
     current_layer.add_line_break();
     return current_layer;
     }
 
-fn make_content_chunk(content: String, x_val: f32, right_margin: f32, font_size: f32) -> Vec<String> {
-    // TO DO: 한 줄에 들어갈 수 있는 글자 수 계산하는 로직 필요
-    let line_length = 70;
+fn count_letter_per_line(x_val: f32, left_margin: f32, right_margin: f32, font_size: f32) -> usize {
+    // 글자 1포인트 
+    let aval_line = x_val - (left_margin + right_margin);
+    let one_size = font_size/3.3;
+    return (aval_line/one_size) as usize
+}
+
+fn make_content_chunk(content: String, line_length: usize) -> Vec<String> {
     let line_count = content.chars().count()/line_length;
     if line_count > 0 {
-        return split_content(line_count,line_length, content);
+        return _split_content(line_count,line_length, content);
     }
     else {
         return vec![content];
     }
 }
 
-fn split_content(line_count: usize, line_length:usize, content: String) -> Vec<String> {
+fn _split_content(line_count: usize, line_length:usize, content: String) -> Vec<String> {
     let mut lines = vec![];
     let mut idx = 0;
     let char_vec: Vec<char> = content.chars().collect();
