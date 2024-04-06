@@ -2,7 +2,10 @@
 name = "typecat"
 version = "0.1.0"
 edition = "2021"
-authors = ["Jae-Hwan Chung <dialektike@gmail.com>","Jess <dev.bearabbit@gmail.com>"]
+authors = [
+    "Jae-Hwan Chung <dialektike@gmail.com>",
+    "Jess <dev.bearabbit@gmail.com>",
+]
 exclude = ["/docs"] #crates.io에 업로드할 때 제외할 파일
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -15,7 +18,6 @@ pest = "2.0"
 pest_derive = "2.0"
 clap = { version = "4.0", features = ["derive"] }
 glob = "0.3.1"
-ttf-parser = "0.20.0"
 printpdf = "0.7.0"
 
 [lib]
