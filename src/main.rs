@@ -2,14 +2,16 @@ use std::fs::File;
 use std::io::{BufReader, Read};
 
 use clap::error::ContextKind;
-use typecat::markdown_parser;
 use typecat::parse_toml;
-use typecat::pdf_compiler;
 use typecat::validate;
 use typecat::{validate_toml_file, D_T_FILE_LOC};
 
 // CMD로 작동하기 위한 코드 시작
 use clap::Parser as clap_parser;
+
+//md 파일 파싱 및 pdf 변환 코드 임포트
+use crate::markdown::md_parser;
+use crate::pdf::pdf_converter;
 
 #[derive(clap_parser)]
 #[command(author, version, about, long_about = None)]
@@ -116,8 +118,8 @@ fn main() {
     //     Err(_) => todo!(),
     // }
     // 마크다운 파서 테스트 시작
-    let parsed_data = markdown_parser();
-    pdf_compiler(parsed_data);
+    let parsed_data = md_parser::parse();
+    pdf_converter::convert(parsed_data);
     // 마크다운 파서 테스트 끝
     // CMD로 작동하기 위한 코드 시작
     // 사용법 아래와 같이 입력하면 됩니다.

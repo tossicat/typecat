@@ -8,10 +8,9 @@ extern crate pest;
 #[macro_use]
 extern crate pest_derive;
 mod file_manager;
-mod markdown_parser;
-mod models;
-mod pdf_printer;
 mod toml_parser;
+mod markdown;
+mod pdf;
 
 // 아래 두 상수는 원칙적으로는 `toml`이나 `ini` 형식의 파일로 설정을 저장하고
 // 이를 프로그램이 실행될 때 읽어서 처리해야 하지만
@@ -36,10 +35,3 @@ pub fn parse_toml(contents: String) {
     toml_parser::parsing_toml(contents);
 }
 
-pub fn markdown_parser() -> Vec<(markdown_parser::Rule, Vec<models::FragmentType>)> {
-    markdown_parser::parse_markdown()
-}
-
-pub fn pdf_compiler(parsed_data: Vec<(markdown_parser::Rule, Vec<models::FragmentType>)>) {
-    pdf_printer::compile(parsed_data);
-}
