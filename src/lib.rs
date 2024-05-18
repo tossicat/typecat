@@ -38,11 +38,11 @@ pub fn parse_toml(contents: String) {
     toml_parser::parsing_toml(contents);
 }
 
-pub fn parse_markdown() -> Vec<(Rule, Vec<FragmentType>)> {
-    let result = markdown::md_parser::parse();
+pub fn parse_markdown(path: &str) -> Vec<(Rule, Vec<FragmentType>)> {
+    let result = markdown::md_parser::parse(path);
     return result
 }
 
-pub fn convert_pdf(parsed_data: Vec<(Rule, Vec<FragmentType>)>) {
-    pdf::pdf_converter::convert(parsed_data);
+pub fn convert_pdf(output_path: &str, parsed_data: Vec<(Rule, Vec<FragmentType>)>) {
+    pdf::pdf_converter::convert(output_path, parsed_data);
 }

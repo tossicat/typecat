@@ -8,8 +8,8 @@ use crate::markdown::functions::*;
 #[grammar = "markdown/markdown.pest"]
 pub struct MarkdownParser;
 
-pub fn parse() -> Vec<(Rule, Vec<FragmentType>)> {
-    let unparsed_file = read_to_string("test/pdf.md").expect("cannot read file");
+pub fn parse(path: &str) -> Vec<(Rule, Vec<FragmentType>)> {
+    let unparsed_file = read_to_string(path).expect("cannot read file");
     let file = MarkdownParser::parse(Rule::FILE, &unparsed_file)
         .expect("unsuccessful parse")
         .next()

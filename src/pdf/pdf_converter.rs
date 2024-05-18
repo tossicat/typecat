@@ -3,12 +3,10 @@ use crate::markdown::md_parser::Rule;
 use crate::markdown::datatypes::FragmentType;
 use printpdf::*;
 use std::fs::File;
-use std::env::current_dir;
-use std::env;
 use std::io::BufWriter;
 use crate::pdf::functions::*;
 
-pub fn convert(parsed_data: Vec<(Rule, Vec<FragmentType>)>) {
+pub fn convert(output_path: &str, parsed_data: Vec<(Rule, Vec<FragmentType>)>) {
     // A4기준
     let x_val = 210.0;
     let mut y_val = 297.0;
@@ -17,8 +15,6 @@ pub fn convert(parsed_data: Vec<(Rule, Vec<FragmentType>)>) {
     let mut current_layer = doc.get_page(page1).get_layer(layer1);
 
     // TO DO: 한국어 폰트 테스트, 폰트 변경 로직 작업 필요
-    let cwd_path = current_dir().unwrap().into_os_string().into_string().unwrap();
-    env::set_var("CWD", cwd_path);
     let mut font_reader =
         std::io::Cursor::new(include_bytes!(concat!("../../assets/fonts/NanumGothic.ttf")).as_ref());
     let font = doc.add_external_font(&mut font_reader).unwrap();
@@ -46,6 +42,6 @@ pub fn convert(parsed_data: Vec<(Rule, Vec<FragmentType>)>) {
     }
     current_layer.end_text_section();
 
-    doc.save(&mut BufWriter::new(File::create("test.pdf").unwrap()))
+    doc.save(&mut BufWriter::new(File::create(output_path).unwrap()))
         .unwrap();
 }
