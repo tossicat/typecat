@@ -7,7 +7,7 @@ use std::io;
 extern crate pest;
 #[macro_use]
 extern crate pest_derive;
-mod file_manager;
+// mod file_manager;
 mod toml_parser;
 mod markdown;
 mod pdf;
@@ -31,7 +31,7 @@ pub fn validate(file_names: &[String]) -> Result<(String, String), String> {
 }
 
 pub fn validate_toml_file(file_names: &String) -> Result<(bool, bool), io::Error> {
-    file_manager::is_toml_file(file_names)
+    file_manager::is_toml_file(file_names, DEFAULT_THEME_FOLDER)
 }
 
 pub fn parse_toml(contents: String) {
