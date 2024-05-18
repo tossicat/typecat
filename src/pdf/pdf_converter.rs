@@ -19,9 +19,8 @@ pub fn convert(parsed_data: Vec<(Rule, Vec<FragmentType>)>) {
     // TO DO: 한국어 폰트 테스트, 폰트 변경 로직 작업 필요
     let cwd_path = current_dir().unwrap().into_os_string().into_string().unwrap();
     env::set_var("CWD", cwd_path);
-    let origin = env::var("CWD").unwrap();
     let mut font_reader =
-        std::io::Cursor::new(include_bytes!(concat!(env!("CWD"), "/assets/fonts/NanumGothic.ttf")).as_ref());
+        std::io::Cursor::new(include_bytes!(concat!("../../assets/fonts/NanumGothic.ttf")).as_ref());
     let font = doc.add_external_font(&mut font_reader).unwrap();
 
     current_layer.begin_text_section();
@@ -37,7 +36,6 @@ pub fn convert(parsed_data: Vec<(Rule, Vec<FragmentType>)>) {
         let line_length = count_letter_per_line(x_val,left_margin, right_margin, font_size);
         let lines = make_content_chunk(content, line_length);
         for line in lines {
-            println!("{:?}", line);
             // 행간
             y_val -= font_size/4.0;
 

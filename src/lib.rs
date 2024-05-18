@@ -12,6 +12,9 @@ mod toml_parser;
 mod markdown;
 mod pdf;
 
+use crate::markdown::md_parser::Rule;
+use crate::markdown::datatypes::FragmentType;
+
 // 아래 두 상수는 원칙적으로는 `toml`이나 `ini` 형식의 파일로 설정을 저장하고
 // 이를 프로그램이 실행될 때 읽어서 처리해야 하지만
 // 현재는 개발 초기이기 때문에 이렇게 임시로 rust 모듈을 사용해서
@@ -35,3 +38,11 @@ pub fn parse_toml(contents: String) {
     toml_parser::parsing_toml(contents);
 }
 
+pub fn parse_markdown() -> Vec<(Rule, Vec<FragmentType>)> {
+    let result = markdown::md_parser::parse();
+    return result
+}
+
+pub fn convert_pdf(parsed_data: Vec<(Rule, Vec<FragmentType>)>) {
+    pdf::pdf_converter::convert(parsed_data);
+}
