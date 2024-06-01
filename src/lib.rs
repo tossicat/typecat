@@ -4,6 +4,8 @@
 //!
 
 use std::io;
+use std::path::PathBuf;
+
 extern crate pest;
 #[macro_use]
 extern crate pest_derive;
@@ -26,6 +28,10 @@ use crate::markdown::md_parser::Rule;
 pub const D_T_FILE_LOC: &str = "assets/themes/default.toml";
 pub const DEFAULT_THEME_FOLDER: &str = "assets/themes";
 pub const DEFAULT_FONT_FOLDER: &str = "assets/fonts";
+
+pub fn read_assets_fonts_dir() -> Result<Vec<PathBuf>, String> {
+    file_manager::read_assets_fonts_dir(&DEFAULT_FONT_FOLDER.to_string())
+}
 
 pub fn validate(file_names: &[String]) -> Result<(String, String), String> {
     file_manager::is_2_files_extensions_md_or_toml(file_names)
