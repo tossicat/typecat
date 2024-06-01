@@ -29,6 +29,12 @@ pub const D_T_FILE_LOC: &str = "assets/themes/default.toml";
 pub const DEFAULT_THEME_FOLDER: &str = "assets/themes";
 pub const DEFAULT_FONT_FOLDER: &str = "assets/fonts";
 
+/// 디폴트 font 폴더에서 폰트 파일 목록을 읽어 오는 함수
+///
+/// 이 프로젝트에서 사용하는 폰트가 들어 있는 폴더 위치는
+/// `DEFAULT_THEME_FOLDER`에 들어 있습니다.
+/// 이곳에 들어 있는 폰트 파일을 목록으로 반환합니다.
+/// 만약 해당 폴더안에 폰트 파일이 없으면 에러 메세지를 반환합니다.
 pub fn read_assets_fonts_dir() -> Result<Vec<PathBuf>, String> {
     file_manager::read_assets_fonts_dir(&DEFAULT_FONT_FOLDER.to_string())
 }
