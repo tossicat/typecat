@@ -155,6 +155,8 @@ fn main() {
         }
         Err(_) => todo!(),
     }
+    // 아래 2줄은 폰트 폴더 안에 들어 있는 폰트 파일을 읽어오는 것을 테스트 하기 위한
+    // 코드입니다. 폰트 관련 작업이 어느 정도 진행되면 지우겠습니다.
     let temp_fn = read_assets_fonts_dir();
     println!("font files names: \n {:?}", temp_fn);
 }
