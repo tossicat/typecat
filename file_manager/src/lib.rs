@@ -17,10 +17,8 @@ use std::{io, path::Path};
 pub fn read_assets_fonts_dir(fonts_dir: &String) -> Result<Vec<PathBuf>, String> {
     let mut file_name_list: Vec<PathBuf> = Vec::new();
     let path = Path::new(fonts_dir);
-    for entry in path.read_dir().expect("read_dir call failed") {
-        if let Ok(entry) = entry {
-            file_name_list.push(entry.path());
-        }
+    for entry in path.read_dir().expect("read_dir call failed").flatten() {
+        file_name_list.push(entry.path());
     }
     if file_name_list.is_empty() {
         let temp_err_msg = format!("No! font file in {}", fonts_dir);
@@ -57,7 +55,7 @@ pub fn is_toml_file(file_name: &String, path: &str) -> Result<(bool, bool), io::
         true => Ok((true, false)),
         false => {
             let temp_new_path = String::from(path);
-            let temp_new_path = temp_new_path + "/" + &file_name;
+            let temp_new_path = temp_new_path + "/" + file_name;
             let is_sub_temp_file_path = Path::new(&temp_new_path).try_exists()?;
             match is_sub_temp_file_path {
                 true => Ok((false, true)),
