@@ -25,6 +25,7 @@ use crate::markdown::datatypes::FragmentType;
 //
 pub const D_T_FILE_LOC: &str = "assets/themes/default.toml";
 pub const DEFAULT_THEME_FOLDER: &str = "assets/themes";
+pub const DEFAULT_FONT_FOLDER: &str = "assets/fonts";
 
 pub fn validate(file_names: &[String]) -> Result<(String, String), String> {
     file_manager::is_2_files_extensions_md_or_toml(file_names)
