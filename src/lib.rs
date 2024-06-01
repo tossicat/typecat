@@ -23,8 +23,8 @@ use crate::markdown::datatypes::FragmentType;
 // 'D_T_FILE_LOC'은 'DEFAULT_THEME_FILE_LOCATAION' 의 약자:
 // 필요한 테마 파일을 지정하지 않은 경우 이 파일을 이용합니다.
 //
-pub const D_T_FILE_LOC: &str = "themes/default.toml";
-pub const DEFAULT_THEME_FOLDER: &str = "themes";
+pub const D_T_FILE_LOC: &str = "assets/themes/default.toml";
+pub const DEFAULT_THEME_FOLDER: &str = "assets/themes";
 
 pub fn validate(file_names: &[String]) -> Result<(String, String), String> {
     file_manager::is_2_files_extensions_md_or_toml(file_names)
