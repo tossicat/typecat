@@ -22,11 +22,11 @@ pub fn read_assets_fonts_dir(fonts_dir: &String) -> Result<Vec<PathBuf>, String>
             file_name_list.push(entry.path());
         }
     }
-    if file_name_list.len() == 0 {
+    if file_name_list.is_empty() {
         let temp_err_msg = format!("No! font file in {}", fonts_dir);
-        return Err(temp_err_msg.to_string());
+        Err(temp_err_msg.to_string())
     } else {
-        return Ok(file_name_list);
+        Ok(file_name_list)
     }
 }
 
