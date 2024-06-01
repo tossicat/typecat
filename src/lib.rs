@@ -36,7 +36,8 @@ pub fn read_flie(file_name: &String) -> String {
 
 /// 디폴트 toml 파일을 읽어 오는 함수
 ///
-/// 이 함수를 따로 만든 이유는 디폴트 toml 파일을 읽어 온다는
+/// 이 함수를 따로 만든 이유는 디폴트 파일인
+/// `assets/themes/default.toml`을 읽어 온다는
 /// 것을 표시하기 위한 `println!()`이 필요하기 때문입니다.
 pub fn read_default_toml_file() -> String {
     let temp_path = D_T_FILE_LOC;
