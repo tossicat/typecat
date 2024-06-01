@@ -7,8 +7,22 @@
 //!
 //! 이 file manager 작업 공간만 테스트를 하려면 `cargo test`을 하시면 됩니다.
 
+use std::fs::File;
+use std::io::{BufReader, Read};
 use std::path::PathBuf;
 use std::{io, path::Path};
+
+/// 입력된 파일을 읽어 그 내용을 `String` 타입으로 반환하는 함수
+///
+pub fn read_flie(file_name: &String) -> String {
+    let mut data = String::new();
+    let f = File::open(file_name).expect("Unable to open file");
+    let mut reader = BufReader::new(f);
+    reader
+        .read_to_string(&mut data)
+        .expect("Unable to read string");
+    data
+}
 
 /// 특정 폴더에 들어 있는 폰트 파일 목록을 읽어 오는 함수
 ///

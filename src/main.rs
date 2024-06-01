@@ -1,8 +1,5 @@
-use std::fs::File;
-use std::io::{BufReader, Read};
-
 use typecat::{convert_pdf, parse_markdown, parse_toml, validate};
-use typecat::{validate_toml_file, read_assets_fonts_dir, D_T_FILE_LOC};
+use typecat::{validate_toml_file, read_assets_fonts_dir, read_flie, read_default_toml_file};
 
 // CMD로 작동하기 위한 코드 시작
 use clap::Parser as clap_parser;
@@ -12,30 +9,6 @@ use clap::Parser as clap_parser;
 struct Cli {
     file_names: Vec<String>,
 }
-// CMD로 작동하기 위한 코드 끝
-///
-/// 입력된 파일을 읽어 그 내용을 반환하는 함수
-///
-fn read_flie(file_name: &String) -> String {
-    let mut data = String::new();
-    let f = File::open(file_name).expect("Unable to open file");
-    let mut reader = BufReader::new(f);
-    reader
-        .read_to_string(&mut data)
-        .expect("Unable to read string");
-    data
-}
-
-/// 디폴트 toml 파일을 읽어 오는 함수
-///
-/// 이 함수를 따로 만든 이유는 디폴트 toml 파일을 읽어 온다는
-/// 것을 표시하기 위한 `println!()`이 필요하기 때문입니다.
-fn read_default_toml_file() -> String {
-    let temp_path = D_T_FILE_LOC;
-    println!("reading `{}`", temp_path);
-    read_flie(&temp_path.to_string())
-}
-
 
 /// CMD로 입력된 파일을 읽어 오는 함수
 ///

@@ -29,6 +29,21 @@ pub const D_T_FILE_LOC: &str = "assets/themes/default.toml";
 pub const DEFAULT_THEME_FOLDER: &str = "assets/themes";
 pub const DEFAULT_FONT_FOLDER: &str = "assets/fonts";
 
+
+pub fn read_flie(file_name: &String) -> String {
+    file_manager::read_flie(file_name)
+}
+
+/// 디폴트 toml 파일을 읽어 오는 함수
+///
+/// 이 함수를 따로 만든 이유는 디폴트 toml 파일을 읽어 온다는
+/// 것을 표시하기 위한 `println!()`이 필요하기 때문입니다.
+pub fn read_default_toml_file() -> String {
+    let temp_path = D_T_FILE_LOC;
+    println!("reading `{}`", temp_path);
+    read_flie(&temp_path.to_string())
+}
+
 /// 디폴트 font 폴더에서 폰트 파일 목록을 읽어 오는 함수
 ///
 /// 이 프로젝트에서 사용하는 폰트가 들어 있는 폴더 위치는
