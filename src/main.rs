@@ -1,8 +1,10 @@
 use std::fs::File;
 use std::io::{BufReader, Read};
+use std::path::Path;
+use std::path::PathBuf;
 
-use typecat::{parse_toml, validate, parse_markdown, convert_pdf};
-use typecat::{validate_toml_file, D_T_FILE_LOC};
+use typecat::{convert_pdf, parse_markdown, parse_toml, validate};
+use typecat::{validate_toml_file, DEFAULT_FONT_FOLDER, D_T_FILE_LOC};
 
 // CMD로 작동하기 위한 코드 시작
 use clap::Parser as clap_parser;
@@ -34,6 +36,28 @@ fn read_default_toml_file() -> String {
     let temp_path = D_T_FILE_LOC;
     println!("reading `{}`", temp_path);
     read_flie(&temp_path.to_string())
+}
+
+/// 디폴트 font 돌더에서 폰트 파일 목록을 읽어 오는 함수
+///
+/// 이 프로젝트에서 사용하는 폰트가 들어 있는 폴더 위치는
+/// `DEFAULT_THEME_FOLDER`에 들어 있습니다.
+/// 이곳에 들어 있는 폰트 파일을 목록으로 반환합니다.
+/// 만약 해당 폴더안에 폰트 파일이 없으면 에러 메세지를 반환합니다.
+fn read_assets_fonts_dir() -> Result<Vec<PathBuf>, String> {
+    let mut file_name_list: Vec<PathBuf> = Vec::new();
+    let path = Path::new(DEFAULT_FONT_FOLDER);
+    for entry in path.read_dir().expect("read_dir call failed") {
+        if let Ok(entry) = entry {
+            file_name_list.push(entry.path());
+        }
+    }
+    if file_name_list.len() == 0 {
+        let temp_err_msg = format!("No! font file in {}", DEFAULT_FONT_FOLDER);
+        return Err(temp_err_msg.to_string());
+    } else {
+        return Ok(file_name_list);
+    }
 }
 
 /// CMD로 입력된 파일을 읽어 오는 함수
@@ -131,4 +155,6 @@ fn main() {
         }
         Err(_) => todo!(),
     }
+    let temp_fn = read_assets_fonts_dir();
+    println!("font files names: \n {:?}", temp_fn);
 }
