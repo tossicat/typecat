@@ -8,12 +8,12 @@ extern crate pest;
 #[macro_use]
 extern crate pest_derive;
 // mod file_manager;
-mod toml_parser;
 mod markdown;
 mod pdf;
+mod toml_parser;
 
-use crate::markdown::md_parser::Rule;
 use crate::markdown::datatypes::FragmentType;
+use crate::markdown::md_parser::Rule;
 
 // 아래 두 상수는 원칙적으로는 `toml`이나 `ini` 형식의 파일로 설정을 저장하고
 // 이를 프로그램이 실행될 때 읽어서 처리해야 하지만
@@ -41,7 +41,7 @@ pub fn parse_toml(contents: String) {
 
 pub fn parse_markdown(path: &str) -> Vec<(Rule, Vec<FragmentType>)> {
     let result = markdown::md_parser::parse(path);
-    return result
+    return result;
 }
 
 pub fn convert_pdf(output_path: &str, parsed_data: Vec<(Rule, Vec<FragmentType>)>) {
