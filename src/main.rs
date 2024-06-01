@@ -9,6 +9,7 @@ use clap::Parser as clap_parser;
 struct Cli {
     file_names: Vec<String>,
 }
+// CMD로 작동하기 위한 코드 끝
 
 /// CMD로 입력된 파일을 읽어 오는 함수
 ///
