@@ -1,8 +1,8 @@
 extern crate printpdf;
-use crate::markdown::md_parser::Rule;
+use crate::markdown::parser::Rule;
 use crate::markdown::datatypes::FragmentType;
 use printpdf::*;
-
+ 
 pub fn convert_text(
     current_layer: PdfLayerReference,
     line: String,
@@ -41,7 +41,6 @@ fn _split_content(line_count: usize, line_length:usize, content: String) -> Vec<
         if content.chars().count() >= idx+line_length {
             let chunk = &char_vec[idx..idx+line_length];
             let result: String = chunk.iter().collect();
-            println!("{:?}", result.len());
             lines.push(result);
             idx = idx + line_length;
         }

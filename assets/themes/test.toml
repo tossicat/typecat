@@ -1,23 +1,23 @@
 [common]
 # 페이지 크기(A4기준)
-page_width = 210.0
-page_height = 297.0
+page_width = 210
+page_height = 297
 # 마진
-top_margin = 
-bottom_margin = 
-left_margin = 
-right_margin = 
+top_margin = 10
+bottom_margin = 10
+left_margin = 10
+right_margin = 10
 # 행간
 leading = 10
 # 제공해주는 템플릿
-font_type = default
-font_default_size = 
+font_type = "default"
+font_size = 10
 
 [header]
-h1_size = 
-h2_size = 
-h3_size = 
-h4_size = 
-h5_size = 
-h6_size = 
+h1_size = 24
+h2_size = 22
+h3_size = 20
+h4_size = 18
+h5_size = 16
+h6_size = 14
 

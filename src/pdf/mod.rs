@@ -1,2 +1,2 @@
-pub mod pdf_converter;
+pub mod converter;
 mod functions;

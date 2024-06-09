@@ -19,6 +19,7 @@ pest_derive = "2.0"
 clap = { version = "4.0", features = ["derive"] }
 glob = "0.3.1"
 printpdf = "0.7.0"
+thiserror = "1.0"
 
 file_manager = { path = "file_manager" }
 

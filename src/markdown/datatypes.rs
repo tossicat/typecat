@@ -1,4 +1,4 @@
-use crate::markdown::md_parser::Rule;
+use crate::markdown::parser::Rule;
 
 #[derive(Debug)]
 pub enum FragmentType {

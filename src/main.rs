@@ -1,4 +1,4 @@
-use typecat::{convert_pdf, parse_markdown, parse_toml, validate};
+use typecat::{convert_pdf, parse_markdown, parse_toml, parse_toml_v2, validate};
 use typecat::{validate_toml_file, read_assets_fonts_dir, read_flie, read_default_toml_file};
 
 // CMD로 작동하기 위한 코드 시작
@@ -86,17 +86,40 @@ fn main() {
     //     }
     //     Err(_) => todo!(),
     // }
-    // 마크다운 파서 테스트 시작
-    let md_path = "test/pdf.md";
-    let output_path = "test.pdf";
-    let parsed_data = parse_markdown(md_path);
-    convert_pdf(output_path, parsed_data);
-    // 마크다운 파서 테스트 끝
     // CMD로 작동하기 위한 코드 시작
     // 사용법 아래와 같이 입력하면 됩니다.
     // cargo run test/pdf.md default.toml
+    
+    // 현재 PDF converter에 맞는 toml 양식 개발 진행중
+    // cargo run test/pdf.md assets/themes/test.toml
+
     let cli = Cli::parse();
     println!("files_names: {:?}", cli.file_names);
+    
+    println!("############# 마크다운 파서 테스트 by Jess #############");
+    // 마크다운 파서 테스트 시작
+    let parsed_data = parse_markdown(&cli.file_names[0]);
+    let output_path = "test.pdf";
+    convert_pdf(output_path, parsed_data);
+    // 마크다운 파서 테스트 끝
+    println!("############# 마크다운 파서 테스트 완료 by Jess #############");
+    
+    println!("############# TOML 파서 테스트 by Jess #############");
+    // toml 파서 테스트 시작
+    let toml_data = parse_toml_v2(&cli.file_names[1]);
+
+    match toml_data {
+        Ok(config) => {
+            println!("Common page_width: {}", config.common.page_width);
+            println!("Header page_width: {}", config.header.h1_size);
+        }
+        Err(e) => {
+            eprintln!("Error reading config: {}", e);
+        }
+    }
+    // toml 파서 테스트 끝
+    println!("############# TOML 파서 테스트 완료 by Jess #############");
+
     let temp_string = read_files(cli.file_names);
     match temp_string {
         Ok(m) => {

@@ -1,5 +1,5 @@
 use crate::markdown::datatypes::{FragmentType, Link, Word};
-use crate::markdown::md_parser::Rule;
+use crate::markdown::parser::Rule;
 use pest::iterators::Pair;
 
 pub fn parse_header(header: Pair<Rule>) -> (Rule, Vec<FragmentType>) {
