@@ -304,4 +304,18 @@ mod tests {
             is_file_extensions_md_or_toml(&temp_file_name)
         );
     }
+
+    #[test]
+
+    fn _read_assets_fonts_dir() {
+        pub const DEFAULT_FONT_FOLDER: &str = "../assets/fonts";
+        pub const ASSERT_FONT: &str = "../assets/fonts/NanumGothicExtraBold.ttf";
+        let temp = read_assets_fonts_dir(&DEFAULT_FONT_FOLDER.to_string());
+        let temp = match temp {
+            Ok(temp) => temp,
+            Err(error) => panic!("Problem opening the file: {:?}", error),
+        };
+        // println!("list: {:?}", temp[1]);
+        assert!(temp[1].to_str() == Some(ASSERT_FONT));
+    }
 }
