@@ -1,5 +1,7 @@
 use typecat::{convert_pdf, parse_markdown, parse_toml, parse_toml_v2, validate};
-use typecat::{validate_toml_file, read_assets_fonts_dir, read_flie, read_default_toml_file};
+use typecat::{validate_toml_file, read_flie, read_default_toml_file};
+
+pub const DEFAULT_FONT_FOLDER: &str = "./assets/fonts";
 
 // CMD로 작동하기 위한 코드 시작
 use clap::Parser as clap_parser;
@@ -130,7 +132,7 @@ fn main() {
         Err(_) => todo!(),
     }
     // 아래 2줄은 폰트 폴더 안에 들어 있는 폰트 파일을 읽어오는 것을 테스트 하기 위한
-    // 코드입니다. 폰트 관련 작업이 어느 정도 진행되면 지우겠습니다.
-    let temp_fn = read_assets_fonts_dir();
+    // 코드입니다. 폰트 관련 작업을 할 때 사용하시면 됩니다.
+    let temp_fn = file_manager::read_font(DEFAULT_FONT_FOLDER);
     println!("font files names: \n {:?}", temp_fn);
 }

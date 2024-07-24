@@ -1,14 +1,15 @@
 const DEMO_TTF: &[u8] = include_bytes!("./fonts/NanumGothic.ttf");
-pub const DEFAULT_FONT_FOLDER: &str = "../assets/fonts";
+const DEFAULT_FONT_FOLDER: &str = "../assets/fonts";
 
 use std::sync::Arc;
 
 use file_manager::read_font;
+
 use fontdb;
 
 #[test]
 fn temp_test() {
-    let temp = read_font();
+    let temp = read_font(DEFAULT_FONT_FOLDER);
     println!("results:`{:?}`", temp);
 }
 
@@ -27,7 +28,7 @@ fn add_font_and_get_ids_back() {
 }
 
 #[test]
-fn _loading_font_lists_into_db_in_folder_assets() {
+fn _loading_font_lists_into_db_in_folder_asset() {
     pub const DEFAULT_FONT_FOLDER: &str = "../assets/fonts";
     let mut font_db = fontdb::Database::new();
     font_db.load_fonts_dir(DEFAULT_FONT_FOLDER);
