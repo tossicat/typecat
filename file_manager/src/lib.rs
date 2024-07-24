@@ -15,10 +15,9 @@ use std::io::{BufReader, Read};
 use std::path::PathBuf;
 use std::{io, path::Path};
 
-
 /// 특정 폴더 안에 있는 폰트 파일들의 정보를 읽어 반환하는 함수
 /// 이 프로젝트에서는 통상적으로 "../assets/fonts" 을 사용합니다.
-pub fn read_font(files_loc:&str) -> Vec<Font> {
+pub fn read_font(files_loc: &str) -> Vec<Font> {
     font_parser::loading_font_lists_into_db_in_assets_folder(files_loc)
 }
 

@@ -8,7 +8,7 @@ pub struct Font {
     source: Source,
 }
 
-pub fn loading_font_lists_into_db_in_assets_folder(files_loc:&str) -> Vec<Font> {
+pub fn loading_font_lists_into_db_in_assets_folder(files_loc: &str) -> Vec<Font> {
     let mut font_db = fontdb::Database::new();
     font_db.load_fonts_dir(files_loc);
 
