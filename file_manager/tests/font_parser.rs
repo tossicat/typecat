@@ -1,7 +1,16 @@
 const DEMO_TTF: &[u8] = include_bytes!("./fonts/NanumGothic.ttf");
+pub const DEFAULT_FONT_FOLDER: &str = "../assets/fonts";
 
-use fontdb;
 use std::sync::Arc;
+
+use file_manager::read_font;
+use fontdb;
+
+#[test]
+fn temp_test() {
+    let temp = read_font();
+    println!("results:`{:?}`", temp);
+}
 
 #[test]
 fn add_font_and_get_ids_back() {
@@ -18,7 +27,7 @@ fn add_font_and_get_ids_back() {
 }
 
 #[test]
-fn add_fonts_db() {
+fn _loading_font_lists_into_db_in_folder_assets() {
     pub const DEFAULT_FONT_FOLDER: &str = "../assets/fonts";
     let mut font_db = fontdb::Database::new();
     font_db.load_fonts_dir(DEFAULT_FONT_FOLDER);
@@ -29,5 +38,23 @@ fn add_fonts_db() {
         font_db.len(),
         now.elapsed().as_millis()
     );
+
+    // println!("reading {:?}", font_db.query(temp_query));
     println!("reading {:?}", font_db);
+    for item in font_db.faces() {
+        // let temp = if item.source {
+        //     fontdb::Source::File(n) => n,
+        //     _ => ,
+        // };
+        println!(
+            "{:?}, {:?}, {:?}, {:#?}",
+            item.families, item.style, item.weight, item.source
+        );
+    }
+    // for item in font_db.faces() {
+    //     println!("{:?}", item.families);
+    //     for sub_item in &item.families {
+    //         println!("{:?}", sub_item);
+    //     }
+    // }
 }
