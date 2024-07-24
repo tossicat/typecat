@@ -1,21 +1,14 @@
-use fontdb;
+use fontdb::{self, Source};
 
 const _DEFAULT_FONT_FOLDER: &str = "../assets/fonts";
 
 #[derive(Debug)]
 pub struct Font {
     name: String,
-    is_bold_exist: bool,
-    is_italic_exist: bool,
+    is_bold: bool,
+    is_italic: bool,
+    source: Source,
 }
-
-// fn is_italic_exist() = {
-//     match item.style {
-//         fontdb::Style::Normal => todo!(),
-//         fontdb::Style::Italic => todo!(),
-//         fontdb::Style::Oblique => todo!(),
-//     }
-// };
 
 pub fn loading_font_lists_into_db_in_assets_folder() -> Vec<Font> {
     let mut font_db = fontdb::Database::new();
@@ -29,8 +22,21 @@ pub fn loading_font_lists_into_db_in_assets_folder() -> Vec<Font> {
             // println!("{:?}", sub_item);
             let temp_font = Font {
                 name: sub_item.0.clone(),
-                is_bold_exist: true,
-                is_italic_exist: true,
+                source: item.source.clone(),
+                is_bold: {
+                    match item.weight {
+                        fontdb::Weight(700) => true,
+                        fontdb::Weight(400) => false,
+                        _ => false,
+                    }
+                },
+                is_italic: {
+                    match item.style {
+                        fontdb::Style::Normal => false,
+                        fontdb::Style::Italic => true,
+                        fontdb::Style::Oblique => false,
+                    }
+                },
             };
             font_list.push(temp_font);
         }

@@ -7,10 +7,19 @@
 //!
 //! 이 file manager 작업 공간만 테스트를 하려면 `cargo test`을 하시면 됩니다.
 
+mod font_parser;
+
+use crate::font_parser::Font;
 use std::fs::File;
 use std::io::{BufReader, Read};
 use std::path::PathBuf;
 use std::{io, path::Path};
+
+/// "../assets/fonts" 폴더에서 폰트 파일을 읽어 반환하는 함수
+///
+pub fn read_font() -> Vec<Font> {
+    font_parser::loading_font_lists_into_db_in_assets_folder()
+}
 
 /// 입력된 파일을 읽어 그 내용을 `String` 타입으로 반환하는 함수
 ///
