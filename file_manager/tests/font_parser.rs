@@ -11,12 +11,12 @@ fn temp_test() {
 }
 
 #[test]
-/// font_db를 이용한 폰트 검색 
+/// font_db를 이용한 폰트 검색
 fn _font_db_test() {
     let mut font_db = fontdb::Database::new();
     font_db.load_fonts_dir(DEFAULT_FONT_FOLDER);
 
-    const FAMILY_NAME: &str = "나눔고딕";
+    const FAMILY_NAME: &str = "Twitter Color Emoji";
     let query = fontdb::Query {
         families: &[fontdb::Family::Name(FAMILY_NAME), fontdb::Family::SansSerif],
         weight: fontdb::Weight::BOLD,
@@ -55,16 +55,16 @@ fn _loading_font_lists_into_db_in_folder_asset() {
 
     // println!("reading {:?}", font_db.query(temp_query));
     println!("reading {:?}", font_db);
-    for item in font_db.faces() {
-        // let temp = if item.source {
-        //     fontdb::Source::File(n) => n,
-        //     _ => ,
-        // };
-        println!(
-            "{:?}, {:?}, {:?}, {:#?}",
-            item.families, item.style, item.weight, item.source
-        );
-    }
+    // for item in font_db.faces() {
+    //     // let temp = if item.source {
+    //     //     fontdb::Source::File(n) => n,
+    //     //     _ => ,
+    //     // };
+    //     println!(
+    //         "{:?}, {:?}, {:?}, {:#?}",
+    //         item.families, item.style, item.weight, item.source
+    //     );
+    // }
     // for item in font_db.faces() {
     //     println!("{:?}", item.families);
     //     for sub_item in &item.families {
