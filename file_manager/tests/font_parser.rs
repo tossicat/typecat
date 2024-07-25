@@ -1,7 +1,4 @@
-const DEMO_TTF: &[u8] = include_bytes!("./fonts/NanumGothic.ttf");
 const DEFAULT_FONT_FOLDER: &str = "../assets/fonts";
-
-use std::sync::Arc;
 
 use file_manager::read_font;
 
@@ -14,22 +11,38 @@ fn temp_test() {
 }
 
 #[test]
-fn add_font_and_get_ids_back() {
+/// font_db를 이용한 폰트 검색 
+fn _font_db_test() {
     let mut font_db = fontdb::Database::new();
-    let ids = font_db.load_font_source(fontdb::Source::Binary(Arc::new(DEMO_TTF)));
+    font_db.load_fonts_dir(DEFAULT_FONT_FOLDER);
 
-    assert_eq!(ids.len(), 1);
-    let id = ids[0];
+    const FAMILY_NAME: &str = "나눔고딕";
+    let query = fontdb::Query {
+        families: &[fontdb::Family::Name(FAMILY_NAME), fontdb::Family::SansSerif],
+        weight: fontdb::Weight::BOLD,
+        ..fontdb::Query::default()
+    };
 
-    let font = font_db.face(id).unwrap();
-    println!("reading `{:?}`", ids);
-    assert!(font.families.iter().any(|(name, _)| name == "NanumGothic"));
-    println!("reading `{:?}`", font.style);
+    let now = std::time::Instant::now();
+    match font_db.query(&query) {
+        Some(id) => {
+            let (src, index) = font_db.face_source(id).unwrap();
+            if let fontdb::Source::File(ref path) = &src {
+                println!(
+                    "Font '{}':{} found in {}ms.",
+                    path.display(),
+                    index,
+                    now.elapsed().as_micros() as f64 / 1000.0
+                );
+            }
+        }
+        None => {
+            println!("Error: '{}' not found.", FAMILY_NAME);
+        }
+    }
 }
-
 #[test]
 fn _loading_font_lists_into_db_in_folder_asset() {
-    pub const DEFAULT_FONT_FOLDER: &str = "../assets/fonts";
     let mut font_db = fontdb::Database::new();
     font_db.load_fonts_dir(DEFAULT_FONT_FOLDER);
     let now = std::time::Instant::now();
