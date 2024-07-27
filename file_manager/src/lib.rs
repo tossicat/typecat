@@ -7,18 +7,37 @@
 //!
 //! 이 file manager 작업 공간만 테스트를 하려면 `cargo test`을 하시면 됩니다.
 
-mod font_parser;
+pub mod font_parser;
 
-use crate::font_parser::Font;
 use std::fs::File;
 use std::io::{BufReader, Read};
 use std::path::PathBuf;
 use std::{io, path::Path};
 
+use fontdb::Database;
+
+use crate::font_parser::{Font, FontStyle};
+
 /// 특정 폴더 안에 있는 폰트 파일들의 정보를 읽어 반환하는 함수
 /// 이 프로젝트에서는 통상적으로 "../assets/fonts" 을 사용합니다.
 pub fn read_font(files_loc: &str) -> Vec<Font> {
     font_parser::loading_font_lists_into_db_in_assets_folder(files_loc)
+}
+
+/// 특정 폴더 안에 있는 폰트 파일들의 정보를 읽어 폰트 디비를 만든 다음
+/// 특정 폰트 이름과 아래 스타일 중 하나를 선택하여 앞에서 만든
+/// 폰트 디비에 그런 폰트가 있는 찾는 함수
+/// 아래 코드는 데스트 코드처럼 보이지만 사용쳐에 맞게 여기서 고치면 됩니다.
+///
+/// ```rust
+/// pub enum FontStyle { Bold, Italic, Normal,}
+/// ``` 
+/// 참고로 이 프로젝트에서는 통상적으로 "../assets/fonts" 을 사용합니다.
+pub fn search_for_font(font_db: Database){
+
+    const FAMILY_NAME: &str = "Inria Serif";
+    // const FAMILY_NAME: &str = "NanumGothic";
+    font_parser::search_for_font_in_db(font_db, FAMILY_NAME, FontStyle::Italic);
 }
 
 /// 입력된 파일을 읽어 그 내용을 `String` 타입으로 반환하는 함수
