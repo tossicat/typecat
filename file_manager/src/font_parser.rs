@@ -34,17 +34,11 @@ pub fn search_for_font_in_db(font_db: Database, font_name: &str, font_style: Fon
             ..fontdb::Query::default()
         };
 
-        let now = std::time::Instant::now();
         match font_db.query(&query) {
             Some(id) => {
                 let (src, index) = font_db.face_source(id).unwrap();
                 if let fontdb::Source::File(ref path) = &src {
-                    println!(
-                        "Font '{}':{} found in {}ms.",
-                        path.display(),
-                        index,
-                        now.elapsed().as_micros() as f64 / 1000.0
-                    );
+                    println!("Font '{}':{} found", path.display(), index,);
                 }
             }
             None => {
@@ -59,17 +53,11 @@ pub fn search_for_font_in_db(font_db: Database, font_name: &str, font_style: Fon
             ..fontdb::Query::default()
         };
 
-        let now = std::time::Instant::now();
         match font_db.query(&query) {
             Some(id) => {
                 let (src, index) = font_db.face_source(id).unwrap();
                 if let fontdb::Source::File(ref path) = &src {
-                    println!(
-                        "Font '{}':{} found in {}ms.",
-                        path.display(),
-                        index,
-                        now.elapsed().as_micros() as f64 / 1000.0
-                    );
+                    println!("Font '{}':{} found", path.display(), index,);
                 }
             }
             None => {
