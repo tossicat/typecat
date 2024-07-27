@@ -31,10 +31,9 @@ pub fn read_font(files_loc: &str) -> Vec<Font> {
 ///
 /// ```rust
 /// pub enum FontStyle { Bold, Italic, Normal,}
-/// ``` 
+/// ```
 /// 참고로 이 프로젝트에서는 통상적으로 "../assets/fonts" 을 사용합니다.
-pub fn search_for_font(font_db: Database){
-
+pub fn search_for_font(font_db: Database) {
     const FAMILY_NAME: &str = "Inria Serif";
     // const FAMILY_NAME: &str = "NanumGothic";
     font_parser::search_for_font_in_db(font_db, FAMILY_NAME, FontStyle::Italic);
