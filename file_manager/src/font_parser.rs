@@ -1,6 +1,6 @@
 use std::path::PathBuf;
 
-use fontdb::{self, Source};
+use fontdb::{self, Database, Source};
 
 #[derive(Debug)]
 pub struct Font {
@@ -16,37 +16,65 @@ pub enum FontStyle {
     Normal,
 }
 
-pub fn search_for_font(font_list: &Vec<Font>, font_name: &str, font_style: FontStyle) {
-    let mut path = PathBuf::new();
-    for item in font_list {
-        if item.name == font_name {
-            match font_style {
-                FontStyle::Bold => {
-                    if item.is_bold == true {
-                        match &item.source {
-                            Source::Binary(_) => todo!(),
-                            Source::File(e) => path = e.to_path_buf(),
-                            Source::SharedFile(_, _) => todo!(),
-                        }
-                    }
+fn search_for_font_style(font_style: FontStyle) -> (u16, bool) {
+    match font_style {
+        FontStyle::Bold => (700, false),
+        FontStyle::Italic => (700, true),
+        FontStyle::Normal => (400, false),
+    }
+}
+
+pub fn search_for_font_in_db(font_db: Database, font_name: &str, font_style: FontStyle) {
+    let (temp_weight, is_italic) = search_for_font_style(font_style);
+    if is_italic == true {
+        let query = fontdb::Query {
+            families: &[fontdb::Family::Name(font_name), fontdb::Family::SansSerif],
+            weight: fontdb::Weight(temp_weight),
+            style: fontdb::Style::Italic,
+            ..fontdb::Query::default()
+        };
+
+        let now = std::time::Instant::now();
+        match font_db.query(&query) {
+            Some(id) => {
+                let (src, index) = font_db.face_source(id).unwrap();
+                if let fontdb::Source::File(ref path) = &src {
+                    println!(
+                        "Font '{}':{} found in {}ms.",
+                        path.display(),
+                        index,
+                        now.elapsed().as_micros() as f64 / 1000.0
+                    );
                 }
-                FontStyle::Italic => {
-                    if item.is_italic == true {
-                        match &item.source {
-                            Source::Binary(_) => todo!(),
-                            Source::File(e) => path = e.to_path_buf(),
-                            Source::SharedFile(_, _) => todo!(),
-                        }
-                    }
-                }
-                FontStyle::Normal => match &item.source {
-                    Source::Binary(_) => todo!(),
-                    Source::File(e) => path = e.to_path_buf(),
-                    Source::SharedFile(_, _) => todo!(),
-                },
             }
-        } else {
-            println!("Path: {:?}", path);
+            None => {
+                println!("Error: '{}' not found.", font_name);
+            }
+        }
+    } else {
+        let query = fontdb::Query {
+            families: &[fontdb::Family::Name(font_name), fontdb::Family::SansSerif],
+            weight: fontdb::Weight(temp_weight),
+            style: fontdb::Style::Normal,
+            ..fontdb::Query::default()
+        };
+
+        let now = std::time::Instant::now();
+        match font_db.query(&query) {
+            Some(id) => {
+                let (src, index) = font_db.face_source(id).unwrap();
+                if let fontdb::Source::File(ref path) = &src {
+                    println!(
+                        "Font '{}':{} found in {}ms.",
+                        path.display(),
+                        index,
+                        now.elapsed().as_micros() as f64 / 1000.0
+                    );
+                }
+            }
+            None => {
+                println!("Error: '{}' not found.", font_name);
+            }
         }
     }
 }

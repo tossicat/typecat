@@ -1,6 +1,6 @@
 const DEFAULT_FONT_FOLDER: &str = "../assets/fonts";
 
-use file_manager::{font_parser::FontStyle, font_parser::search_for_font_style};
+use file_manager::{font_parser::search_for_font_in_db, font_parser::FontStyle};
 
 use fontdb;
 
@@ -21,67 +21,14 @@ use fontdb;
 // }
 
 #[test]
-/// font_db를 이용한 다른폰트 검색
+/// font_db를 이용한 다른 폰트 검색
 fn _font_db_other_test() {
     let mut font_db = fontdb::Database::new();
     font_db.load_fonts_dir(DEFAULT_FONT_FOLDER);
 
-    // const FAMILY_NAME: &str = "Inria Serif";
-    const FAMILY_NAME: &str = "NanumGothic";
-    let (temp_weight, is_italic) = search_for_font_style(FontStyle::Italic);
-    println!("{}, {}", temp_weight, is_italic);
-    if is_italic == true {
-        let query = fontdb::Query {
-            families: &[fontdb::Family::Name(FAMILY_NAME), fontdb::Family::SansSerif],
-            weight: fontdb::Weight(temp_weight),
-            style: fontdb::Style::Italic,
-            ..fontdb::Query::default()
-        };
-    
-        let now = std::time::Instant::now();
-        match font_db.query(&query) {
-            Some(id) => {
-                let (src, index) = font_db.face_source(id).unwrap();
-                if let fontdb::Source::File(ref path) = &src {
-                    println!(
-                        "Font '{}':{} found in {}ms.",
-                        path.display(),
-                        index,
-                        now.elapsed().as_micros() as f64 / 1000.0
-                    );
-                }
-            }
-            None => {
-                println!("Error: '{}' not found.", FAMILY_NAME);
-            }
-        }
-    } else {
-        let query = fontdb::Query {
-            families: &[fontdb::Family::Name(FAMILY_NAME), fontdb::Family::SansSerif],
-            weight: fontdb::Weight(temp_weight),
-            style: fontdb::Style::Normal,
-            ..fontdb::Query::default()
-        };
-    
-        let now = std::time::Instant::now();
-        match font_db.query(&query) {
-            Some(id) => {
-                let (src, index) = font_db.face_source(id).unwrap();
-                if let fontdb::Source::File(ref path) = &src {
-                    println!(
-                        "Font '{}':{} found in {}ms.",
-                        path.display(),
-                        index,
-                        now.elapsed().as_micros() as f64 / 1000.0
-                    );
-                }
-            }
-            None => {
-                println!("Error: '{}' not found.", FAMILY_NAME);
-            }
-        }
-    }
-    
+    const FAMILY_NAME: &str = "Inria Serif";
+    // const FAMILY_NAME: &str = "NanumGothic";
+    search_for_font_in_db(font_db, FAMILY_NAME, FontStyle::Italic);
 }
 
 #[test]
@@ -91,11 +38,11 @@ fn _font_db_test() {
     font_db.load_fonts_dir(DEFAULT_FONT_FOLDER);
 
     const FAMILY_NAME: &str = "NanumGothic";
-    let query = fontdb::Query {
-        families: &[fontdb::Family::Name(FAMILY_NAME), fontdb::Family::SansSerif],
-        weight: fontdb::Weight::BOLD,
-        ..fontdb::Query::default()
-    };
+    // let query = fontdb::Query {
+    //     families: &[fontdb::Family::Name(FAMILY_NAME), fontdb::Family::SansSerif],
+    //     weight: fontdb::Weight::BOLD,
+    //     ..fontdb::Query::default()
+    // };
 
     // let query = fontdb::Query {
     //     families: &[fontdb::Family::Name(FAMILY_NAME)],
@@ -114,7 +61,6 @@ fn _font_db_test() {
         weight: fontdb::Weight::BOLD,
         ..fontdb::Query::default()
     };
-
 
     let now = std::time::Instant::now();
     match font_db.query(&query) {
